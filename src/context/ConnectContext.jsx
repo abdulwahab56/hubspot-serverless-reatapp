@@ -5,6 +5,10 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import { MdOutlinePausePresentation } from "react-icons/md";
+import { BsPlayBtn } from "react-icons/bs";
+import { ImStop } from "react-icons/im";
+
 
 const ConnectContext = createContext();
 
@@ -170,8 +174,15 @@ export const ConnectProvider = ({ children }) => {
 
   return (
     <ConnectContext.Provider value={{ agent, contacts }}>
-        <div className="w-[350px] bg-[#121212] p-1.5">
-        <span>Octavebytes</span>
+        <div className="w-[350px] bg-[#121212] px-1.5 flex items-center justify-between py-2">
+        <span className=" size-5">Octavebytes</span>
+        <span className="flex mr-11 gap-1.5">
+
+        <MdOutlinePausePresentation className=" size-5" />
+        <BsPlayBtn className=" size-5" />
+        <ImStop className="size-5" />
+        </span>
+        
       </div>
       <div ref={containerRef} style={{ width: "350px", height: "600px" }} />
       {children}

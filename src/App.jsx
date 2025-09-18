@@ -1,15 +1,18 @@
 // src/App.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ConnectProvider } from "./context/ConnectContext";
 import CCPComponent from "./component/CCPComponent";
 import { useConnect } from "./context/ConnectContext";
+import { Route, Routes } from "react-router";
+import Install from "./component/Install";
+import OauthCallback from "./component/OauthCallback";
 
 // Example component that uses the global connect context
 const AgentStatus = () => {
   const { agent, contacts } = useConnect();
   console.log("Agent state:", agent?.getState()?.name);
   if (!agent) {
-    console.log("agents gettt......",agent)
+    console.log("agents gettt......", agent);
     return <div>No agent connected</div>;
   }
 
@@ -18,33 +21,37 @@ const AgentStatus = () => {
       <h3 className="text-lg font-semibold">Agent Status</h3>
       <p>Agent State: {agent.getState().name}</p>
       <p>Active Contacts: {contacts.length}</p>
-      {contacts.map((contact, index) => (
-        <div key={contact.getContactId()} className="mt-2">
-          <p>Contact {index + 1}: {contact.getState().name}</p>
-        </div>
-      ))}
     </div>
   );
 };
 
+const API_BASE = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/getDataDynamodb";
 
 const App = () => {
+  const [hasToken, setHasToken] = useState(false);
+
+  useEffect(() => {
+    fetch(`${API_BASE}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setHasToken(data.hasToken);
+      })
+      .catch(() => setLoading(false));
+  }, []);
   return (
     <>
-      <div className="">
-        
-        <div className="flex gap-6">
-          {/* CCP Component */}
-          <div className="flex-shrink-0">
-            <CCPComponent />
+      <Routes>
+        <Route path="/app/oauth-callback" element={<OauthCallback />} />
+        {hasToken ? (
+          <Route path="/*" element={<CCPComponent />} />
+        ) : (
+          <Route path="/*" element={<Install />} />
+        )}
+      </Routes>
+      {/* <div className="flex gap-6">
+          <div className="flex-shrink-0">  
           </div>
-          
-          {/* Main Content Area */}
-          <div className="flex-1 space-y-6">
-            <AgentStatus />
-          </div>
-        </div>
-      </div>
+        </div> */}
     </>
   );
 };

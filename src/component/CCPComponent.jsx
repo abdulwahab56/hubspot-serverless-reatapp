@@ -3,6 +3,7 @@ import { MdOutlinePausePresentation } from "react-icons/md";
 import { BsPlayBtn } from "react-icons/bs";
 import { ImStop } from "react-icons/im";
 import { useConnect } from "../context/ConnectContext";
+import { handleOnConnecting } from "./ConnectEventHandler";
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
@@ -10,6 +11,8 @@ let ccpInitialized = false;
 const CCPComponent = () => {
   const containerRef = useRef(null);
   const { agent, setAgent, contacts, setContacts } = useConnect();
+
+  
 
   useEffect(() => {
     // Safety for SSR
@@ -113,12 +116,16 @@ const CCPComponent = () => {
       connect.contact((contact) => {
         console.log("New contact:", contact);
         setContacts((prev) => [...prev, contact]);
+        contact.onConnecting(()=>{handleOnConnecting(contact)})
 
-        contact.onEnded(() => {
-          setContacts((prev) =>
-            prev.filter((c) => c.getContactId() !== contact.getContactId())
-          );
-        });
+
+        // subscribeToContactEvents(contact);
+
+        // contact.onEnded(() => {
+        //   setContacts((prev) =>
+        //     prev.filter((c) => c.getContactId() !== contact.getContactId())
+        //   );
+        // });
       });
     };
 
@@ -155,6 +162,18 @@ const CCPComponent = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [agent]);
+
+  //  // Function to subscribe to all contact events
+  // const subscribeToContactEvents = (contact) => {
+  //   console.log('Subscribing to events for contact:', contact.getContactId());
+    
+  //   contact.onConnecting(() => handleOnConnecting(contact));
+  //   contact.onMissed(() => handleOnMissed(contact));
+  //   contact.onConnected(() => handleOnConnected(contact));
+  //   contact.onACW(() => handleOnACW(contact));
+  //   contact.onEnded(() => handleOnEnded(contact, setContacts));
+  //   contact.onDestroy(() => handleOnDestroy(contact));
+  // };
 
   return (
    <div>

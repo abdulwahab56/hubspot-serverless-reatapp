@@ -21,11 +21,12 @@ export default function OauthCallback() {
           if (!res.ok) {
             throw new Error(`HTTP error ${res.status}`);
           }
+          console.log("response", res)
           return res.json();
         })
         .then(() => {
           // After tokens are stored in DynamoDB, refresh app
-          navigate("/");
+          navigate("/*");
         })
         .catch((err) => console.error("OAuth callback error:", err));
     }

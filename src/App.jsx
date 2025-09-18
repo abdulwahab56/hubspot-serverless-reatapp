@@ -31,12 +31,13 @@ const App = () => {
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_BASE}`)
+    fetch(API_BASE)
       .then((res) => res.json())
       .then((data) => {
         setHasToken(data.hasToken);
+        console.log("data",data)
       })
-      .catch(() => setLoading(false));
+      .catch((error) => console.log(error));
   }, []);
   return (
     <>

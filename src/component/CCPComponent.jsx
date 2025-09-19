@@ -119,7 +119,7 @@ const CCPComponent = () => {
         contact.onConnecting(()=>{handleOnConnecting(contact)})
 
 
-        // subscribeToContactEvents(contact);
+        subscribeToContactEvents(contact);
 
         // contact.onEnded(() => {
         //   setContacts((prev) =>
@@ -163,17 +163,17 @@ const CCPComponent = () => {
     };
   }, [agent]);
 
-  //  // Function to subscribe to all contact events
-  // const subscribeToContactEvents = (contact) => {
-  //   console.log('Subscribing to events for contact:', contact.getContactId());
+   // Function to subscribe to all contact events
+  const subscribeToContactEvents = (contact) => {
+    console.log('Subscribing to events for contact:', contact.getContactId());
     
-  //   contact.onConnecting(() => handleOnConnecting(contact));
-  //   contact.onMissed(() => handleOnMissed(contact));
-  //   contact.onConnected(() => handleOnConnected(contact));
-  //   contact.onACW(() => handleOnACW(contact));
-  //   contact.onEnded(() => handleOnEnded(contact, setContacts));
-  //   contact.onDestroy(() => handleOnDestroy(contact));
-  // };
+    contact.onConnecting(() => handleOnConnecting(contact));
+    contact.onMissed(() => handleOnMissed(contact));
+    contact.onConnected(() => handleOnConnected(contact));
+    contact.onACW(() => handleOnACW(contact));
+    contact.onEnded(() => handleOnEnded(contact, setContacts));
+    contact.onDestroy(() => handleOnDestroy(contact));
+  };
 
   return (
    <div>

@@ -28,7 +28,7 @@ const AgentStatus = () => {
 const API_BASE = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/getDataDynamodb";
 
 const App = () => {
-  const [hasToken, setHasToken] = useState(false);
+ const {hasToken, setHasToken} = useConnect();
 
   useEffect(() => {
     fetch(API_BASE)
@@ -39,6 +39,9 @@ const App = () => {
       })
       .catch((error) => console.log(error));
   }, []);
+   if (hasToken === null) {
+    return <p>Loading...</p>; // 👈 no flicker, just loader
+  }
   return (
     <>
       <Routes>
@@ -49,10 +52,7 @@ const App = () => {
           <Route path="/*" element={<Install />} />
         )}
       </Routes>
-      {/* <div className="flex gap-6">
-          <div className="flex-shrink-0">  
-          </div>
-        </div> */}
+
     </>
   );
 };

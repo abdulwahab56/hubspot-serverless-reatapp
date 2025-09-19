@@ -4,6 +4,7 @@ const ConnectContext = createContext();
 export const ConnectProvider = ({ children }) => {
   const [agent, setAgent] = useState(null);
   const [contacts, setContacts] = useState([]);
+  const [hasToken, setHasToken] = useState(null);
 
 
   return (
@@ -11,7 +12,9 @@ export const ConnectProvider = ({ children }) => {
       agent, 
       setAgent, 
       contacts, 
-      setContacts 
+      setContacts,
+      hasToken,
+      setHasToken 
     }}>
       {children}
     </ConnectContext.Provider>

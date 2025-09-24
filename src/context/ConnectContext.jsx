@@ -3,19 +3,43 @@ import React, { createContext, useContext, useState, useReducer } from "react";
 const ConnectContext = createContext();
 export const ConnectProvider = ({ children }) => {
   const [agent, setAgent] = useState(null);
-  const [contacts, setContacts] = useState([]);
   const [hasToken, setHasToken] = useState(null);
+  const [contacts, setContacts] = useState(new Map());
 
+  // Helper: set or update a contact
+  const updateContact = (contactId, data) => {
+    setContacts((prev) => {
+      const newContacts = new Map(prev);
+      newContacts.set(contactId, {
+        ...(newContacts.get(contactId) || {}),
+        ...data,
+      });
+      return newContacts;
+    });
+  };
+
+  // Helper: remove a contact
+  const removeContact = (contactId) => {
+    setContacts((prev) => {
+      const newContacts = new Map(prev);
+      newContacts.delete(contactId);
+      return newContacts;
+    });
+  };
 
   return (
-    <ConnectContext.Provider value={{ 
-      agent, 
-      setAgent, 
-      contacts, 
-      setContacts,
-      hasToken,
-      setHasToken 
-    }}>
+    <ConnectContext.Provider
+      value={{
+        agent,
+        setAgent,
+        contacts,
+        setContacts,
+        hasToken,
+        setHasToken,
+        updateContact,
+        removeContact
+      }}
+    >
       {children}
     </ConnectContext.Provider>
   );
@@ -24,7 +48,7 @@ export const ConnectProvider = ({ children }) => {
 export const useConnect = () => {
   const context = useContext(ConnectContext);
   if (!context) {
-    throw new Error('useConnect must be used within a ConnectProvider');
+    throw new Error("useConnect must be used within a ConnectProvider");
   }
   return context;
 };

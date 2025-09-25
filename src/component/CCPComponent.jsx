@@ -9,6 +9,7 @@ import useOnMissed from "../hooks/useOnMissed";
 import useOnACW from "../hooks/useOnACW";
 import useOnEnded from "../hooks/useOnEnded";
 import useOnDestroy from "../hooks/useOnDestroy";
+import useConfig from "../hooks/useConfig"
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
@@ -16,6 +17,7 @@ let ccpInitialized = false;
 const CCPComponent = () => {
   const containerRef = useRef(null);
   const { agent, setAgent, setContacts } = useConnect();
+  const envConfig = useConfig();
 
   // our handler hook
   const onConnecting = useOnConnecting();
@@ -44,7 +46,8 @@ const CCPComponent = () => {
 
     const loadConfig = async () => {
       try {
-        initCCP("oblab2");
+        const instanceAlias = envConfig.CONNECT_ALIAS;
+        initCCP(instanceAlias);
       } catch (err) {
         console.error("Failed to load config:", err);
       }

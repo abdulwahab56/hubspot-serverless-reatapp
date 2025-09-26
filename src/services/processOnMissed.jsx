@@ -1,32 +1,47 @@
-let callState;
+import GlobalStore from "../global/globalStore";
+import { updateEngagement } from "../services/engagementService"; // make sure this exists
 
-export function processOnMissed(contact) {
-  callState = "CALL_END";
-  isMissCall = true;
+export function processOnMissed(
+  contact,
+  isMissCall,
+  setIsMissCall,
+  newOutboundContact
+) {
   console.log("[handleOnMissed] Call Missed Started");
-  var status = contact.getStatus().type;
+
+  // Mark call as missed
+  setIsMissCall(true);
+
+  // Get current status
+  let status = contact.getStatus().type;
   console.log("Call Status(handleOnMissed): " + status);
 
-  console.log("[handleOnMissed] Call Missed Completed");
-  if ((status = "Error")) {
+  // Normalize FAILED status
+  if (status === "Error") {
     status = "FAILED";
   }
   console.log("Status Missed to FAILED & Call Status is Now: " + status);
-  let obj = {
-    callId: engagement_id,
+
+  // Build update object
+  const obj = {
+    callId: GlobalStore.engagement_id,
     callStatus: status,
     contactId: contact.contactId,
-    callStartTime: call_start_time,
+    callStartTime: GlobalStore.callStartTime,
     isRecordingEnable: "false",
-    channelType: channelType,
+    channelType: contact.getType(), // ✅ get directly from contact
   };
-  if (engagement_id && !newOutboundContact) {
+
+  // Update engagement only if it exists and not outbound
+  if (GlobalStore.engagement_id && !newOutboundContact) {
     updateEngagement(obj);
-    // missCallupdateEngagement(obj);
-    console.info("[handleOnMissed] multimatch case there is not engagment-id");
+  } else {
+    console.info("[handleOnMissed] No engagement_id available to update");
   }
+
   console.log("[handleOnMissed] Call Missed Completed", obj);
 
+  // Return UI/context info
   return {
     contactId: contact.getContactId(),
     callState: "MISSED",

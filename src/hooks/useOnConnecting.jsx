@@ -4,12 +4,16 @@ import { processOnConnecting } from "../services/ProcessOnConnecting";
 import useConfig from "./useConfig";
 
 const useOnConnecting = () => {
-  const { updateContact } = useConnect();
-  const envConfig = useConfig()
-
+  const {
+    updateContact,
+    newOutboundContact,
+    setNewOutboundContact,
+    isMissCall,
+    setIsMissCall,
+  } = useConnect();
+  const envConfig = useConfig();
 
   return (contact) => {
-
     let currentAgent = null;
     connect.agent((a) => {
       currentAgent = a;
@@ -17,7 +21,15 @@ const useOnConnecting = () => {
     const agentId = currentAgent.getConfiguration().agentARN.split("/")[3];
     console.log("agentId at onConnecting:", agentId);
 
-    const result = processOnConnecting(contact, agentId,envConfig);
+    const result = processOnConnecting(
+      contact,
+      agentId,
+      envConfig,
+      newOutboundContact,
+      setNewOutboundContact,
+      isMissCall,
+      setIsMissCall
+    );
     console.log("connecting.....", result);
 
     // now safe to update context

@@ -5,6 +5,8 @@ export const ConnectProvider = ({ children }) => {
   const [agent, setAgent] = useState(null);
   const [hasToken, setHasToken] = useState(null);
   const [contacts, setContacts] = useState(new Map());
+  const [newOutboundContact, setNewOutboundContact] = useState(false);
+  const [isMissCall, setIsMissCall] = useState(false);
 
   // Helper: set or update a contact
   const updateContact = (contactId, data) => {
@@ -14,6 +16,7 @@ export const ConnectProvider = ({ children }) => {
         ...(newContacts.get(contactId) || {}),
         ...data,
       });
+      console.log("updateContact", newContacts)
       return newContacts;
     });
   };
@@ -37,7 +40,11 @@ export const ConnectProvider = ({ children }) => {
         hasToken,
         setHasToken,
         updateContact,
-        removeContact
+        removeContact,
+        newOutboundContact,
+        setNewOutboundContact,
+        isMissCall,
+        setIsMissCall
       }}
     >
       {children}

@@ -10,14 +10,15 @@ export function processOnMissed(
   console.log("[handleOnMissed] Call Missed Started");
 
   // Mark call as missed
-  setIsMissCall(true);
+  GlobalStore.isMissCall = true
+  // setIsMissCall(true);
 
   // Get current status
   let status = contact.getStatus().type;
   console.log("Call Status(handleOnMissed): " + status);
 
   // Normalize FAILED status
-  if (status === "Error") {
+  if (status === "error") {
     status = "FAILED";
   }
   console.log("Status Missed to FAILED & Call Status is Now: " + status);
@@ -34,7 +35,7 @@ export function processOnMissed(
 
   // Update engagement only if it exists and not outbound
   if (GlobalStore.engagement_id && !newOutboundContact) {
-    updateEngagement(obj);
+    updateEngagement(obj,newOutboundContact, GlobalStore.newURL);
   } else {
     console.info("[handleOnMissed] No engagement_id available to update");
   }

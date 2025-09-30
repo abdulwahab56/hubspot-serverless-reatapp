@@ -162,16 +162,44 @@ const CCPComponent = () => {
   }, [agent]);
 
   // Function to subscribe to all contact events
-  const subscribeToContactEvents = (contact) => {
-    console.log("Subscribing to events for contact:", contact.getContactId());
+  // const subscribeToContactEvents = (contact) => {
+  //   console.log("Subscribing to events for contact:", contact.contactData);
 
-    contact.onConnecting(() => onConnecting(contact));
-    contact.onConnected(() => onConnected(contact));
-    contact.onMissed(() => onMissed(contact));
-    contact.onACW(() => onACW(contact));
-    contact.onEnded(() => onEnded(contact));
-    contact.onDestroy(() => onDestroy(contact));  
-  };
+  //   contact.onConnecting(() => onConnecting(contact));
+  //   contact.onConnected(() => onConnected(contact));
+  //   contact.onMissed(() => onMissed(contact));
+  //   contact.onACW(() => onACW(contact));
+  //   contact.onEnded(() => onEnded(contact));
+  //   contact.onDestroy(() => onDestroy(contact));  
+  // };
+  const subscribeToContactEvents = (contact) => {
+  console.log("Subscribing to events for contact:", contact.getContactId());
+
+  contact.onConnecting(() => {
+    console.log("React - onConnecting - contactData:", contact.contactData);
+    onConnecting(contact);
+  });
+  contact.onConnected(() => {
+    console.log("React - onConnected - contactData:", contact.contactData);
+    onConnected(contact);
+  });
+  contact.onMissed(() => {
+    console.log("React - onMissed - contactData:", contact.contactData);
+    onMissed(contact);
+  });
+  contact.onACW(() => {
+    console.log("React - onACW - contactData:", contact.contactData);
+    onACW(contact);
+  });
+  contact.onEnded(() => {
+    console.log("React - onEnded - contactData:", contact.contactData);
+    onEnded(contact);
+  });
+  contact.onDestroy(() => {
+    console.log("React - onDestroy - contactData:", contact.contactData);
+    onDestroy(contact);
+  });
+};
 
   return (
     <div>

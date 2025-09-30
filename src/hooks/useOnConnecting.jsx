@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useConnect } from "../context/ConnectContext";
 import { processOnConnecting } from "../services/ProcessOnConnecting";
 import useConfig from "./useConfig";
@@ -7,13 +6,13 @@ const useOnConnecting = () => {
   const {
     updateContact,
     newOutboundContact,
-    setNewOutboundContact,
+    setNewOutboundContact, 
     isMissCall,
     setIsMissCall,
   } = useConnect();
   const envConfig = useConfig();
 
-  return (contact) => {
+  return (contact) => { 
     let currentAgent = null;
     connect.agent((a) => {
       currentAgent = a;

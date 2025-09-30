@@ -1,13 +1,4 @@
-// services/EngagementService.js
-let hubSpotEntityURL;
-let engagement_id;
-let newURL;
-let call_start_time;
-
-// export function setHubSpotEntityURL(url) {
-//   hubSpotEntityURL = url;
-// }
-
+import GlobalStore from "../global/globalStore";
 export const createEngagement = async (obj, url, newOutboundContact, isMissCall) => {
   console.log("Request to create engagement initiated.");
   const apiURL =
@@ -26,11 +17,12 @@ export const createEngagement = async (obj, url, newOutboundContact, isMissCall)
     }
 
     const res = await response.json();
-    engagement_id = res.engagementId;
+    GlobalStore.engagement_id = res.engagementId;
+    console.log("engagement id from create engagement", GlobalStore.engagement_id)
     let missCallobj;
     if (isMissCall) {
       missCallobj = {
-        callId: engagement_id,
+        callId: GlobalStore.engagement_id,
         //callDuration: 0,
         callStatus: "FAILED", //"COMPLETED", //["COMPLETED", "Canceled", "Busy", "Failed ", "No Answer", "Queued", "In progress"],
         contactId: obj.contactId,
@@ -55,7 +47,7 @@ export const updateEngagement = async (obj, newOutboundContact,url) => {
     const response = await fetch(apiURL, {
       method: "PUT",
       headers: {
-        "Contact-Type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
     });
@@ -64,7 +56,8 @@ export const updateEngagement = async (obj, newOutboundContact,url) => {
     }
     const res = await response.json();
     console.log(`Request to update engagement completed successfully. ${res}`);
-    if (!newOutboundContact) emitSwitchEvent(url);
+    if (!newOutboundContact) emitSwitchEvent(GlobalStore.newURL);
+    GlobalStore.newURL = null;
   } catch (error) {
     console.log(`Request to update engagement failed. Error ${error}`);
   }

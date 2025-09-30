@@ -58,7 +58,7 @@ export function processOnConnecting(
     );
   }
 
-  setIsMissCall(false);
+  GlobalStore.isMissCall = false;
   console.log("[handleOnConnecting] Call Ringing Completed");
 
   return {
@@ -95,7 +95,7 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
     console.log("Call Status :", status.type);
     console.log("Call Time :", status.timestamp);
 
-    let callType = c1.getType();
+    GlobalStore.callType = c1.getType();
 
     // ✅ Save to GlobalStore instead of local
     GlobalStore.call_start_time = status.timestamp;
@@ -104,7 +104,7 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
       channelType,
       phoneNumber,
       callStartTime,
-      callType: callType.toUpperCase(),
+      callType: GlobalStore.callType.toUpperCase(),
       callStatus: "CONNECTING",
       contactId: "",
     };
@@ -118,10 +118,11 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
 async function searchRecord(
   engagement,
   agentId,
-  contact_id,
+  contactId,
   newOutboundContact,
   setNewOutboundContact,
-  isMissCall
+  isMissCall,
+  setIsMissCall
 ) {
   let createContactPhone = engagement.phoneNumber;
   let callType = engagement.callType;
@@ -142,9 +143,9 @@ async function searchRecord(
       },
       body: JSON.stringify({
         phoneNumber: createContactPhone,
-        agentId: agentId,
+        agentId,
         callType,
-        contactId: contact_id,
+        contactId,
       }),
     });
 
@@ -160,13 +161,17 @@ async function searchRecord(
       return;
     } else if (hubSpoContactCount === 1) {
       engagement.contactId = resData[0].vid;
-
-      // ✅ Save globally
-      GlobalStore.engagement_id = resData[0].vid;
+      GlobalStore.hubSpot_contact_id = resData[0].vid;
+      console.log("engagement id from.....")
       GlobalStore.newURL = GlobalStore.hubSpotEntityURL + "/" + resData[0].vid;
 
       setNewOutboundContact(false);
-      createEngagement(engagement, GlobalStore.newURL, newOutboundContact, isMissCall);
+      createEngagement(
+        engagement,
+        GlobalStore.newURL,
+        newOutboundContact,
+        isMissCall
+      );
     } else if (hubSpoContactCount > 1) {
       setNewOutboundContact(false);
       showAccordion(resData);
@@ -204,4 +209,3 @@ document.addEventListener("INBOUND_CALL", function (e) {
   console.log("Contact URL:", e.detail.data);
   window.open(e.detail.data, "_blank");
 });
-

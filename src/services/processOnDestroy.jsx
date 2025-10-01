@@ -89,9 +89,11 @@ export function processOnDestroy(
   contact,
   agentName,
   newOutboundContact,
-  setNewOutboundContact
+  setNewOutboundContact,
+  setShowAccordion
 ) {
   console.log("[handleOnDestroy] Call Ended Started");
+  setShowAccordion(null)
   console.log("destroy", contact.contactData);
   let status = GlobalStore.status;
   console.log("Call Status(Ended): " + status);
@@ -169,7 +171,8 @@ export function processOnDestroy(
     engagement_body = {};
     // contact_id = null;
     GlobalStore.isMissCall = false;
-    multiMatch = false;
+    GlobalStore.multiMatch = false;
+    setShowAccordion(null);
     // newOutboundContact = false;
     // callState = null;
   }

@@ -9,6 +9,9 @@ const useOnConnecting = () => {
     setNewOutboundContact, 
     isMissCall,
     setIsMissCall,
+    setShowAccordion,
+    updateAttribute, 
+    setUpdateAttribute
   } = useConnect();
   const envConfig = useConfig();
 
@@ -27,7 +30,10 @@ const useOnConnecting = () => {
       newOutboundContact,
       setNewOutboundContact,
       isMissCall,
-      setIsMissCall
+      setIsMissCall,
+      setShowAccordion,
+      updateAttribute, 
+      setUpdateAttribute
     );
     console.log("connecting.....", result);
 

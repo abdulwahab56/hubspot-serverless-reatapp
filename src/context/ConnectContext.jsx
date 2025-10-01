@@ -7,6 +7,8 @@ export const ConnectProvider = ({ children }) => {
   const [contacts, setContacts] = useState(new Map());
   const [newOutboundContact, setNewOutboundContact] = useState(false);
   const [isMissCall, setIsMissCall] = useState(false);
+  const [showAccordion, setShowAccordion] = useState(null);
+  const [updateAttribute, setUpdateAttribute] = useState(null)
 
   // Helper: set or update a contact
   const updateContact = (contactId, data) => {
@@ -44,7 +46,11 @@ export const ConnectProvider = ({ children }) => {
         newOutboundContact,
         setNewOutboundContact,
         isMissCall,
-        setIsMissCall
+        setIsMissCall,
+        showAccordion, 
+        setShowAccordion,
+        updateAttribute, 
+        setUpdateAttribute
       }}
     >
       {children}

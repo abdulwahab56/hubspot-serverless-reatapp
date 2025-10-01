@@ -50,7 +50,7 @@ const ShowAccordionComponent = ({showAccordion}) => {
           </thead>
           <tbody>
             {showAccordion && showAccordion.map((contact, index) => (
-                <tr className="hover:bg-gray-50" key={contact.vid || index}>
+                <tr className="hover:bg-blue-300 cursor-pointer" key={contact.vid || index}>
                   <td className="px-4 py-2 border-b text-sm">
                     <button
                       className="contact-link"

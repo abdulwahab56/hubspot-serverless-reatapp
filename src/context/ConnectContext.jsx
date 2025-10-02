@@ -8,7 +8,8 @@ export const ConnectProvider = ({ children }) => {
   const [newOutboundContact, setNewOutboundContact] = useState(false);
   const [isMissCall, setIsMissCall] = useState(false);
   const [showAccordion, setShowAccordion] = useState(null);
-  const [updateAttribute, setUpdateAttribute] = useState(null)
+  const [updateAttribute, setUpdateAttribute] = useState(null);
+  const [recordingToggle, setRecordingToggle] = useState(false)
 
   // Helper: set or update a contact
   const updateContact = (contactId, data) => {
@@ -50,7 +51,9 @@ export const ConnectProvider = ({ children }) => {
         showAccordion, 
         setShowAccordion,
         updateAttribute, 
-        setUpdateAttribute
+        setUpdateAttribute,
+        recordingToggle, 
+        setRecordingToggle
       }}
     >
       {children}

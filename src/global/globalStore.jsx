@@ -15,6 +15,8 @@ const GlobalStore = {
   isMissCall: false,
   hubSpot_contact_id: null,
   multiMatch: false,
+  contact_id: null,
+  engagement_body: {}
 };
 
 export default GlobalStore;

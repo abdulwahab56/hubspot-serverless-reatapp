@@ -14,7 +14,7 @@ export function processOnConnecting(
   isMissCall,
   setIsMissCall,
   setShowAccordion,
-  updateAttribute, 
+  updateAttribute,
   setUpdateAttribute
 ) {
   console.log("agentId", agentId);
@@ -23,7 +23,7 @@ export function processOnConnecting(
   // ✅ Store HubSpot URL globally
   GlobalStore.hubSpotEntityURL = envConfig.HUBSPOT_ENTITY_URL;
 
-  const contactId = contact.contactId;
+  GlobalStore.contact_id = contact.contactId;
   const status = contact.getStatus();
   const channelType = contact.getType();
 
@@ -38,7 +38,6 @@ export function processOnConnecting(
   );
 
   console.log("[handleOnConnecting]", {
-    contactId,
     status,
     channelType,
     callStartTime: GlobalStore.callStartTime,
@@ -53,13 +52,13 @@ export function processOnConnecting(
     searchRecord(
       engagement,
       agentId,
-      contactId,
+      GlobalStore.contact_id,
       newOutboundContact,
       setNewOutboundContact,
       isMissCall,
       setIsMissCall,
       setShowAccordion,
-      updateAttribute, 
+      updateAttribute,
       setUpdateAttribute
     );
   }
@@ -68,7 +67,6 @@ export function processOnConnecting(
   console.log("[handleOnConnecting] Call Ringing Completed");
 
   return {
-    contactId,
     callStartTime: GlobalStore.callStartTime,
     callState: "CALL_START",
     engagement_id: GlobalStore.engagement_id,
@@ -78,7 +76,7 @@ export function processOnConnecting(
 
 function createEngagementBody(contact, status, channelType, callStartTime) {
   let phoneNumber;
-  let engagement_body = {};
+  
 
   console.log("[handleOnConnecting] Call Ringing Started");
 
@@ -86,7 +84,7 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
     const conAtt = contact.getAttributes();
     phoneNumber = conAtt.customer_phone.value;
 
-    engagement_body = {
+    GlobalStore.engagement_body = {
       phoneNumber,
       callStartTime,
       channelType,
@@ -106,7 +104,7 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
     // ✅ Save to GlobalStore instead of local
     GlobalStore.call_start_time = status.timestamp;
 
-    engagement_body = {
+    GlobalStore.engagement_body = {
       channelType,
       phoneNumber,
       callStartTime,
@@ -116,9 +114,9 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
     };
   }
 
-  console.log("[handleOnConnecting] Call Ringing Started", engagement_body);
+  console.log("[handleOnConnecting] Call Ringing Started", GlobalStore.engagement_body);
 
-  return engagement_body;
+  return GlobalStore.engagement_body;
 }
 
 async function searchRecord(
@@ -130,7 +128,7 @@ async function searchRecord(
   isMissCall,
   setIsMissCall,
   setShowAccordion,
-  updateAttribute, 
+  updateAttribute,
   setUpdateAttribute
 ) {
   let createContactPhone = engagement.phoneNumber;
@@ -171,11 +169,11 @@ async function searchRecord(
     } else if (hubSpoContactCount === 1) {
       engagement.contactId = resData[0].vid;
       GlobalStore.hubSpot_contact_id = resData[0].vid;
-      console.log("engagement id from.....")
+      console.log("engagement id from.....");
       GlobalStore.newURL = GlobalStore.hubSpotEntityURL + "/" + resData[0].vid;
 
       setNewOutboundContact(false);
-      console.log("engagementbody", engagement)
+      console.log("engagementbody", engagement);
       createEngagement(
         engagement,
         GlobalStore.newURL,
@@ -186,8 +184,8 @@ async function searchRecord(
       GlobalStore.multiMatch = true;
       setNewOutboundContact(false);
       setShowAccordion(resData);
-      updateAttributeContact(updateAttribute)
-      emitSwitchEvent();
+      // updateAttributeContact(updateAttribute);
+      // emitSwitchEvent();
     }
   } catch (error) {
     console.log(
@@ -196,47 +194,71 @@ async function searchRecord(
   }
 }
 
-const updateAttributeContact = async(updateAttribute)=>{
- const contactId = updateAttribute; 
- UpdateContactAttribute(contactId);
-  let url =  GlobalStore.hubSpotEntityURL + '/' + contactId;
-  newURL = url;
-
-  let oldContactId = engagement_body.contactId;
-  engagement_body.contactId = contactId;
-  hubSpot_contact_id = contactId;
+export const updateAttributeContact = async (updateAttribute) => {
+  const contactId = updateAttribute;
+  UpdateContactAttribute(contactId);
+  let url = GlobalStore.hubSpotEntityURL + "/" + contactId;
+  GlobalStore.newURL = url;
+  let oldContactId = GlobalStore.engagement_body.contactId;
+  GlobalStore.engagement_body.contactId = contactId;
+  GlobalStore.hubSpot_contact_id = contactId;
   if (oldContactId !== contactId) {
-    createEngagement(engagement_body, url);
+    createEngagement(GlobalStore.engagement_body, url);
   } else {
-    engagement_id = contactId;
-    updateCallLink(oldContactId, contactId, engagement_id, url);
+    GlobalStore.engagement_id = contactId;
+    updateCallLink(oldContactId, contactId, GlobalStore.engagement_id, url);
   }
-}
+};
 
-const UpdateContactAttribute = async(contactId)=> {
-  const apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/updateContactAttribute";
+const UpdateContactAttribute = async (contactId) => {
+  const apiURL =
+    "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/updateContactAttribute";
   //let contactInfo = contactId;
-  let body = {
-    initialContactId: contact_id,
+  let obj = {
+    initialContactId: GlobalStore.contact_id,
     contactInfo: contactId,
   };
 
-  $.ajax({
-    url: apiURL,
-    method: 'POST',
-    data: body,
-  })
-    .done(function (res) {
-      console.log(
-        `Request to update contact attributes completed successfully. ${res}`
-      );
-    })
-    .fail(function (error) {
-      console.log(
-        `Request to update contact attributes failed. Error ${error}`
-      );
+  try {
+    const response = fetch(apiURL, {
+      method: "POST",
+      body: JSON.stringify(obj),
     });
-}
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const resData = await response.json();
+    console.log(
+      `Request to update contact attributes completed successfully. ${resData}`
+    );
+  } catch (error) {
+    console.log(`Request to update contact attributes failed. Error ${error}`);
+  }
+};
+
+const updateCallLink = async (oldContactId, contactId, callId, url) => {
+  console.log("Request to update call link initiated.");
+  const apiURL =
+    "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/updateCallLink";
+  let obj = {
+    oldContactId: oldContactId,
+    contactId: contactId,
+    callId: callId,
+  };
+  try {
+    const response = fetch(apiURL, {
+      method: "PUT",
+      body: JSON.stringify(obj),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const resData = await response.json();
+  } catch (error) {
+     console.log(`Request to update contact attributes failed. Error ${error}`);
+  }
+};
 
 const checkContactInfoInAttribute = async (engagement, attr) => {
   console.log("attribute update", attr);
@@ -263,3 +285,6 @@ document.addEventListener("INBOUND_CALL", function (e) {
   console.log("Contact URL:", e.detail.data);
   window.open(e.detail.data, "_blank");
 });
+
+
+

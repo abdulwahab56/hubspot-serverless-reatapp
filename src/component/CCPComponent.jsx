@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { MdOutlinePausePresentation } from "react-icons/md";
 import { BsPlayBtn } from "react-icons/bs";
-import { ImStop } from "react-icons/im";
+import { HiOutlineStop  } from "react-icons/hi";
 import { useConnect } from "../context/ConnectContext";
 import useOnConnecting from "../hooks/useOnConnecting";
 import useOnConnected from "../hooks/useOnConnected";
@@ -17,7 +17,7 @@ let ccpInitialized = false;
 
 const CCPComponent = () => {
   const containerRef = useRef(null);
-  const { agent, setAgent, setContacts, showAccordion } = useConnect();
+  const { agent, setAgent, setContacts, showAccordion, recordingToggle, setRecordingToggle } = useConnect();
   const envConfig = useConfig();
 
   // our handler hook
@@ -198,7 +198,7 @@ const CCPComponent = () => {
           <span className="flex mr-6 gap-1.5">
             <MdOutlinePausePresentation className="size-5" />
             <BsPlayBtn className="size-5" />
-            <ImStop className="size-5" />
+            <HiOutlineStop  className={recordingToggle ? "size-5 text-red-600 animate-pulse" : "size-5 "}/>
           </span>
         </div>
       ) : (

@@ -1,7 +1,7 @@
 import { useConnect } from "../context/ConnectContext";
-import { processOnConnecting } from "../services/ProcessOnConnecting";
+import { processOnConnecting, updateAttributeContact } from "../services/ProcessOnConnecting";
 import useConfig from "./useConfig";
-
+import { useEffect } from "react";
 const useOnConnecting = () => {
   const {
     updateContact,
@@ -11,10 +11,18 @@ const useOnConnecting = () => {
     setIsMissCall,
     setShowAccordion,
     updateAttribute, 
-    setUpdateAttribute
+    setUpdateAttribute,
+    setRecordingToggle
   } = useConnect();
   const envConfig = useConfig();
+   setRecordingToggle(true)
 
+   useEffect(() => {
+    if (updateAttribute) {
+      console.log("Contact selected from accordion:", updateAttribute);
+      updateAttributeContact(updateAttribute);
+    }
+  }, [updateAttribute]);
   return (contact) => { 
     let currentAgent = null;
     connect.agent((a) => {

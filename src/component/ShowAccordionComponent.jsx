@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useConnect } from "../context/ConnectContext";
 
-const ShowAccordionComponent = ({showAccordion}) => {
+const ShowAccordionComponent = ({ showAccordion }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const {setUpdateAttribute} = useConnect();
-  console.log("showAccordion", showAccordion)
+  const { setUpdateAttribute } = useConnect();
+  console.log("showAccordion", showAccordion);
 
-  const onContactSelected = (contactId)=>{
-    console.log("onConatctSelect", contactId)
-    setUpdateAttribute(contactId)
-
-  }
+  const onContactSelected = (contactId) => {
+    console.log("onConatctSelect", contactId);
+    setUpdateAttribute(contactId);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative w-full">
@@ -49,18 +49,24 @@ const ShowAccordionComponent = ({showAccordion}) => {
             </tr>
           </thead>
           <tbody>
-            {showAccordion && showAccordion.map((contact, index) => (
-                <tr className="hover:bg-blue-300 cursor-pointer" key={contact.vid || index}>
+            {showAccordion &&
+              showAccordion.map((contact, index) => (
+                <tr
+                  className="hover:bg-blue-300 cursor-pointer"
+                  onClick={() => onContactSelected(contact.vid)}
+                  key={contact.vid || index}
+                >
                   <td className="px-4 py-2 border-b text-sm">
-                    <button
-                      className="contact-link"
-                      onClick={() => onContactSelected(contact.vid)}
-                    >
+                    <button className="contact-link">
                       {contact.properties?.firstname?.value || "N/A"}
                     </button>
                   </td>
-                  <td className="px-4 py-2 border-b text-sm">{contact.properties?.phone?.value || "N/A"}</td>
-                  <td className="px-4 py-2 border-b text-sm">{contact.properties?.email?.value || "N/A"}</td>
+                  <td className="px-4 py-2 border-b text-sm">
+                    {contact.properties?.phone?.value || "N/A"}
+                  </td>
+                  <td className="px-4 py-2 border-b text-sm">
+                    {contact.properties?.email?.value || "N/A"}
+                  </td>
                 </tr>
               ))}
             {/* <tr className="hover:bg-gray-50">

@@ -169,7 +169,7 @@ export function processOnDestroy(
     // multiMatch_engagementId = null;
     GlobalStore.hubSpot_contact_id = null;
     engagement_body = {};
-    // contact_id = null;
+    GlobalStore.contact_id = null;
     GlobalStore.isMissCall = false;
     GlobalStore.multiMatch = false;
     setShowAccordion(null);

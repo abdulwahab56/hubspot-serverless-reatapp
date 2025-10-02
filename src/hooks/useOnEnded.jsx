@@ -3,7 +3,8 @@ import { processOnEnded } from "../services/processOnEnded";
 import GlobalStore from "../global/globalStore";
 
 const useOnEnded = () => {
-  const { removeContact } = useConnect();
+  const { removeContact, setRecordingToggle } = useConnect();
+  setRecordingToggle(false)
 
   return (contact) => {
     GlobalStore.attribute = contact.getAttributes();

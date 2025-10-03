@@ -97,7 +97,7 @@ export function processOnDestroy(
   console.log("destroy", contact.contactData);
   let status = GlobalStore.status;
   console.log("Call Status(Ended): " + status);
-  const channelType = GlobalStore.channelType;
+  const channelType = contact.getType();
   const attributes = GlobalStore.attribute;
   let callState = "CALL_END";
 
@@ -172,6 +172,7 @@ export function processOnDestroy(
     GlobalStore.contact_id = null;
     GlobalStore.isMissCall = false;
     GlobalStore.multiMatch = false;
+    GlobalStore.agentId = null
     setShowAccordion(null);
     // newOutboundContact = false;
     // callState = null;

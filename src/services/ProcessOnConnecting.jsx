@@ -76,7 +76,6 @@ export function processOnConnecting(
 
 function createEngagementBody(contact, status, channelType, callStartTime) {
   let phoneNumber;
-  
 
   console.log("[handleOnConnecting] Call Ringing Started");
 
@@ -114,7 +113,10 @@ function createEngagementBody(contact, status, channelType, callStartTime) {
     };
   }
 
-  console.log("[handleOnConnecting] Call Ringing Started", GlobalStore.engagement_body);
+  console.log(
+    "[handleOnConnecting] Call Ringing Started",
+    GlobalStore.engagement_body
+  );
 
   return GlobalStore.engagement_body;
 }
@@ -256,7 +258,7 @@ const updateCallLink = async (oldContactId, contactId, callId, url) => {
     }
     const resData = await response.json();
   } catch (error) {
-     console.log(`Request to update contact attributes failed. Error ${error}`);
+    console.log(`Request to update contact attributes failed. Error ${error}`);
   }
 };
 
@@ -286,5 +288,75 @@ document.addEventListener("INBOUND_CALL", function (e) {
   window.open(e.detail.data, "_blank");
 });
 
+export const resumeRecording = async (agentId) => {
+  let apiURL =
+    "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/recordingResume";
+  console.log(
+    `Request to resume recording initiated. Contact Id :${GlobalStore.contact_id} `
+  );
+  let obj = {
+    contactId: GlobalStore.contact_id,
+    initialContactId: GlobalStore.contact_id,
+    agentId,
+  };
 
+  try {
+    const response = fetch(apiURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // ✅ Required
+      },
+      body: JSON.stringify(obj),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
+    const resData = await response.json();
+    console.log(
+      `Request to resume recording completed successfully. Contact Id :${GlobalStore.contact_id}`
+    );
+  } catch (error) {
+    console.log(
+      `Request to resume recording failed. Contact ID :${GlobalStore.contact_id}`
+    );
+  }
+};
+
+export const pauseRecording = async (agentId) => {
+  const apiURL =
+    "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/recordingPause";
+
+  const obj = {
+    contactId: GlobalStore.contact_id,
+    initialContactId: GlobalStore.contact_id,
+    agentId,
+  };
+
+  console.log(`Request to pause recording initiated. Contact Id: ${GlobalStore.contact_id}`);
+
+  try {
+    const response = await fetch(apiURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // ✅ Required
+      },
+      body: JSON.stringify(obj),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const resData = await response.json();
+    console.log(
+      `Request to pause recording completed successfully. Contact Id: ${GlobalStore.contact_id}`,
+      resData
+    );
+  } catch (error) {
+    console.error(
+      `Request to pause recording failed. Contact ID: ${GlobalStore.contact_id}`,
+      error.message
+    );
+  }
+};

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { MdOutlinePausePresentation } from "react-icons/md";
 import { BsPlayBtn } from "react-icons/bs";
-import { HiOutlineStop  } from "react-icons/hi";
+import { HiOutlineStop } from "react-icons/hi";
 import { useConnect } from "../context/ConnectContext";
 import useOnConnecting from "../hooks/useOnConnecting";
 import useOnConnected from "../hooks/useOnConnected";
@@ -9,15 +9,23 @@ import useOnMissed from "../hooks/useOnMissed";
 import useOnACW from "../hooks/useOnACW";
 import useOnEnded from "../hooks/useOnEnded";
 import useOnDestroy from "../hooks/useOnDestroy";
-import useConfig from "../hooks/useConfig"
-import ShowAccordionComponent from "../component/ShowAccordionComponent"
+import useConfig from "../hooks/useConfig";
+import ShowAccordionComponent from "../component/ShowAccordionComponent";
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
 
 const CCPComponent = () => {
   const containerRef = useRef(null);
-  const { agent, setAgent, setContacts, showAccordion, recordingToggle, setRecordingToggle } = useConnect();
+  const {
+    agent,
+    setAgent,
+    setContacts,
+    showAccordion,
+    recordingToggle,
+    pause,
+    setPause,
+  } = useConnect();
   const envConfig = useConfig();
 
   // our handler hook
@@ -40,9 +48,7 @@ const CCPComponent = () => {
 
     // clean up old iframes
     document
-      .querySelectorAll(
-        'iframe[src*="connect.aws/ccp"], iframe[src*="ccp-v2"]'
-      )
+      .querySelectorAll('iframe[src*="connect.aws/ccp"], iframe[src*="ccp-v2"]')
       .forEach((f) => f.remove());
 
     const loadConfig = async () => {
@@ -96,7 +102,6 @@ const CCPComponent = () => {
         setAgent(null);
         setContacts([]);
       });
-
 
       // Agent listener
       connect.agent((newAgent) => {
@@ -162,33 +167,33 @@ const CCPComponent = () => {
     };
   }, [agent]);
   const subscribeToContactEvents = (contact) => {
-  console.log("Subscribing to events for contact:", contact.getContactId());
+    console.log("Subscribing to events for contact:", contact.getContactId());
 
-  contact.onConnecting(() => {
-    console.log("React - onConnecting - contactData:", contact.contactData);
-    onConnecting(contact);
-  });
-  contact.onConnected(() => {
-    console.log("React - onConnected - contactData:", contact.contactData);
-    onConnected(contact);
-  });
-  contact.onMissed(() => {
-    console.log("React - onMissed - contactData:", contact.contactData);
-    onMissed(contact);
-  });
-  contact.onACW(() => {
-    console.log("React - onACW - contactData:", contact.contactData);
-    onACW(contact);
-  });
-  contact.onEnded(() => {
-    console.log("React - onEnded - contactData:", contact.contactData);
-    onEnded(contact);
-  });
-  contact.onDestroy(() => {
-    console.log("React - onDestroy - contactData:", contact.contactData);
-    onDestroy(contact);
-  });
-};
+    contact.onConnecting(() => {
+      console.log("React - onConnecting - contactData:", contact.contactData);
+      onConnecting(contact);
+    });
+    contact.onConnected(() => {
+      console.log("React - onConnected - contactData:", contact.contactData);
+      onConnected(contact);
+    });
+    contact.onMissed(() => {
+      console.log("React - onMissed - contactData:", contact.contactData);
+      onMissed(contact);
+    });
+    contact.onACW(() => {
+      console.log("React - onACW - contactData:", contact.contactData);
+      onACW(contact);
+    });
+    contact.onEnded(() => {
+      console.log("React - onEnded - contactData:", contact.contactData);
+      onEnded(contact);
+    });
+    contact.onDestroy(() => {
+      console.log("React - onDestroy - contactData:", contact.contactData);
+      onDestroy(contact);
+    });
+  };
 
   return (
     <div>
@@ -196,9 +201,30 @@ const CCPComponent = () => {
         <div className="w-[350px] bg-[#121212] px-1.5 flex items-center justify-between py-2">
           <span className="size-5">Octavebytes</span>
           <span className="flex mr-6 gap-1.5">
-            <MdOutlinePausePresentation className="size-5" />
-            <BsPlayBtn className="size-5" />
-            <HiOutlineStop  className={recordingToggle ? "size-5 text-red-600 animate-pulse" : "size-5 "}/>
+            <button
+              disabled={pause !== false} // enable only if call is active + not already paused
+              onClick={() => setPause(true)}
+              className="p-2 rounded bg-amber-500 hover:bg-amber-600 
+                     disabled:bg-amber-900 disabled:cursor-not-allowed"
+            >
+              <MdOutlinePausePresentation className="size-5 text-white" />
+            </button>
+
+            {/* Play Button */}
+            <button
+              disabled={pause !== true} // enable only if paused
+              onClick={() => setPause(false)}
+              className="p-2 rounded bg-amber-500 hover:bg-amber-600 
+                     disabled:bg-amber-900 disabled:cursor-not-allowed"
+            >
+              <BsPlayBtn className="size-5 text-white" />
+            </button>
+
+            <HiOutlineStop
+              className={`size-5 ${
+                recordingToggle ? "text-red-600 animate-pulse" : "text-gray-400"
+              }`}
+            />
           </span>
         </div>
       ) : (
@@ -206,9 +232,11 @@ const CCPComponent = () => {
           <span className="text-white text-sm">Connecting...</span>
         </div>
       )}
-      {
-        showAccordion === null ? "" : <ShowAccordionComponent showAccordion={showAccordion}/>
-      }
+      {showAccordion === null ? (
+        ""
+      ) : (
+        <ShowAccordionComponent showAccordion={showAccordion} />
+      )}
       <div
         ref={containerRef}
         className="w-[350px] h-[90vh] max-h-[600px] min-h-[400px]"

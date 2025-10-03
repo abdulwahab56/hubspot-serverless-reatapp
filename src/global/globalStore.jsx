@@ -16,7 +16,8 @@ const GlobalStore = {
   hubSpot_contact_id: null,
   multiMatch: false,
   contact_id: null,
-  engagement_body: {}
+  engagement_body: {},
+  agentId: null
 };
 
 export default GlobalStore;

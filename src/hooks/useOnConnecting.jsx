@@ -1,7 +1,8 @@
 import { useConnect } from "../context/ConnectContext";
-import { processOnConnecting, updateAttributeContact } from "../services/ProcessOnConnecting";
+import { pauseRecording, processOnConnecting, resumeRecording, updateAttributeContact } from "../services/ProcessOnConnecting";
 import useConfig from "./useConfig";
 import { useEffect } from "react";
+import GlobalStore from "../global/globalStore";
 const useOnConnecting = () => {
   const {
     updateContact,
@@ -12,12 +13,13 @@ const useOnConnecting = () => {
     setShowAccordion,
     updateAttribute, 
     setUpdateAttribute,
-    setRecordingToggle
   } = useConnect();
   const envConfig = useConfig();
-   setRecordingToggle(true)
+  
+   
 
    useEffect(() => {
+    if (!updateAttribute) return; 
     if (updateAttribute) {
       console.log("Contact selected from accordion:", updateAttribute);
       updateAttributeContact(updateAttribute);
@@ -28,12 +30,13 @@ const useOnConnecting = () => {
     connect.agent((a) => {
       currentAgent = a;
     });
-    const agentId = currentAgent.getConfiguration().agentARN.split("/")[3];
-    console.log("agentId at onConnecting:", agentId);
+    GlobalStore.agentId = currentAgent.getConfiguration().agentARN.split("/")[3];
+
+    console.log("agentId at onConnecting:", GlobalStore.agentId);
 
     const result = processOnConnecting(
       contact,
-      agentId,
+      GlobalStore.agentId,
       envConfig,
       newOutboundContact,
       setNewOutboundContact,

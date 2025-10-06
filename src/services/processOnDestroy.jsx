@@ -97,7 +97,7 @@ export function processOnDestroy(
   console.log("destroy", contact.contactData);
   let status = GlobalStore.status;
   console.log("Call Status(Ended): " + status);
-  const channelType = contact.getType();
+  // const channelType = contact.getType();
   const attributes = GlobalStore.attribute;
   let callState = "CALL_END";
 
@@ -127,10 +127,10 @@ export function processOnDestroy(
     var queue = GlobalStore.queue;
 
     let obj = {};
-    if (channelType === "voice") {
+    if (GlobalStore.channelType === "voice") {
       obj.callId = GlobalStore.engagement_id;
       obj.callDuration = callDuration;
-      obj.channelType = channelType;
+      obj.channelType = GlobalStore.channelType;
       obj.callStatus = status; //"COMPLETED",
       obj.queueName = queue;
       obj.agentName = agentName;
@@ -143,7 +143,7 @@ export function processOnDestroy(
       obj.hubspotContactId = GlobalStore.hubSpot_contact_id;
     } else {
       obj.callId = GlobalStore.engagement_id;
-      obj.channelType = channelType;
+      obj.channelType = GlobalStore.channelType;
       obj.callDuration = callDuration;
       obj.queueName = queue;
       obj.agentName = agentName;

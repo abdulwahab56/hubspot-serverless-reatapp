@@ -25,7 +25,7 @@ export function processOnConnecting(
 
   GlobalStore.contact_id = contact.contactId;
   const status = contact.getStatus();
-  const channelType = contact.getType();
+  GlobalStore.channelType = contact.getType();
 
   // ✅ Save callStartTime globally
   GlobalStore.callStartTime = Date.parse(status.timestamp);
@@ -33,13 +33,13 @@ export function processOnConnecting(
   const engagement = createEngagementBody(
     contact,
     status,
-    channelType,
+    GlobalStore.channelType,
     GlobalStore.callStartTime
   );
 
   console.log("[handleOnConnecting]", {
     status,
-    channelType,
+    channelType: GlobalStore.channelType,
     callStartTime: GlobalStore.callStartTime,
     engagement,
   });
@@ -70,7 +70,7 @@ export function processOnConnecting(
     callStartTime: GlobalStore.callStartTime,
     callState: "CALL_START",
     engagement_id: GlobalStore.engagement_id,
-    channelType,
+    channelType : GlobalStore.channelType,
   };
 }
 

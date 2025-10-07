@@ -11,9 +11,11 @@ import useOnEnded from "../hooks/useOnEnded";
 import useOnDestroy from "../hooks/useOnDestroy";
 import useConfig from "../hooks/useConfig";
 import ShowAccordionComponent from "../component/ShowAccordionComponent";
+import { addAgents } from "../services/addAndRemoveAgents.mjs";
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
+let instanceAlias;
 
 const CCPComponent = () => {
   const containerRef = useRef(null);
@@ -53,7 +55,7 @@ const CCPComponent = () => {
 
     const loadConfig = async () => {
       try {
-        const instanceAlias = envConfig.CONNECT_ALIAS;
+        instanceAlias = envConfig.CONNECT_ALIAS;
         initCCP(instanceAlias);
       } catch (err) {
         console.error("Failed to load config:", err);
@@ -99,6 +101,16 @@ const CCPComponent = () => {
       // TERMINATED handler
       connect.core.getEventBus().subscribe(connect.EventType.TERMINATED, () => {
         console.log("Logged out / session terminated");
+        let logOutAgent;
+        let agentLogout = connect.agent((agent) => {
+           logOutAgent = agent.getName();
+          console.log("Agent Logout: ", logOutAgent);
+        });
+        let Obj = {
+          agentName: logOutAgent,
+        };
+        console.log("Agent name is ", Obj.agentName);
+        removeAgent(Obj);
         setAgent(null);
         setContacts([]);
       });
@@ -108,12 +120,20 @@ const CCPComponent = () => {
         console.log("Agent connected:", newAgent);
         setAgent(newAgent);
 
+        let Obj = {
+          agentName: newAgent.getName(),
+          username: newAgent._getData().configuration.username,
+        };
+        addAgents(Obj,instanceAlias);
+
         newAgent.onStateChange(() => setAgent(newAgent));
         newAgent.onRefresh(() => setAgent(newAgent));
 
         // Auto logout after 12h
         setTimeout(() => {
           console.log("Auto-logout after 12h");
+
+          removeAgent(Obj)
           fetch(`https://${instanceAlias}.my.connect.aws/logout`, {
             credentials: "include",
             mode: "no-cors",

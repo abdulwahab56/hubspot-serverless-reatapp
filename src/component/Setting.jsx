@@ -1,12 +1,58 @@
-import React from 'react'
+import React from "react";
+import Switch from "./Switch";
+import AttributeFrom from "./AttributeFrom.jsx";
+import DynamicForm from "./DynamicForm.jsx";
 
 const Setting = () => {
-  return (
-    <div className="pt-4">
-      <h1 className="text-4xl font-bold text-indigo-700 mb-4">Login Agent</h1>
-      <p className="text-gray-700">This page is for agent login functionality.</p>
-    </div>
-  )
-}
+  const noMatchFields = [
+    { name: "firstname", label: "Firstname", type: "text", required: true },
+    { name: "lastname", label: "Lastname", type: "text", required: true },
+  ];
+  const disposition = [
+    { name: "inboundname", label: "Inbound Disposition", type: "text", required: true },
+    { name: "outboundname", label: "Outbound Disposition", type: "text", required: true },
+  ];
+  const handleFormSubmit = ()=>{}
 
-export default Setting
+  const handleToggle = (value) => {
+    console.log("Switch state:", value);
+  };
+  return (
+    <main className="pt-6 px-6 md:px-16 lg:px-32 bg-gray-50">
+      <h1 className="text-3xl font-bold mb-6 text-indigo-700">Settings</h1>
+      <div className="flex items-center justify-between">
+        <Switch label="Outbound Activity Creation" onToggle={handleToggle} />
+        <Switch label="Queue Selection" onToggle={handleToggle} />
+        <Switch label="Wrap-Up Notes" onToggle={handleToggle} />
+      </div>
+      <section>
+         <h1 className="text-3xl mt-6 font-bold text-indigo-700">
+          No Match Configuration
+        </h1>
+          <DynamicForm
+            fields={noMatchFields}
+            onSubmit={handleFormSubmit}
+            buttonText="Submit"
+          />
+      </section>
+      <section>
+        <h1 className="text-3xl mt-6 font-bold text-indigo-700">
+          Engagement Configuration
+        </h1>
+        <AttributeFrom />
+      </section>
+       <section>
+         <h1 className="text-3xl mt-6 font-bold text-indigo-700">
+          Disposition Configuration
+        </h1>
+          <DynamicForm
+            fields={disposition}
+            onSubmit={handleFormSubmit}
+            buttonText="Submit"
+          />
+      </section>
+    </main>
+  );
+};
+
+export default Setting;

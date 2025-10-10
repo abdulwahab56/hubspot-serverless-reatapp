@@ -20,11 +20,17 @@ export const addAgents = async (obj,instanceAlias) => {
     console.log("Request to add agent completed successfully:", resData);
 
     // ✅ Adjust logic depending on your backend response shape
-    if (resData.message && resData.message !== "License is Valid") {
-        alert("your license has been expire or you dont have license please contact to octavebytes administrator")
-      const logoutURL = `https://${instanceAlias}.my.connect.aws/logout`;
-      window.location.replace(logoutURL);
-    }
+    if (
+  resData.message === "Agent logged in successfully" ||
+  resData.message === "Agent already logged in"
+) {
+  console.log("✅ Agent login valid:", resData.message);
+} else {
+  alert("⚠️ Your license is expired or invalid. Please contact Octavebytes administrator.");
+  const logoutURL = `https://${instanceAlias}.my.connect.aws/logout`;
+  window.location.replace(logoutURL);
+}
+
 
     return resData;
   } catch (error) {

@@ -11,7 +11,7 @@ import useOnEnded from "../hooks/useOnEnded";
 import useOnDestroy from "../hooks/useOnDestroy";
 import useConfig from "../hooks/useConfig";
 import ShowAccordionComponent from "../component/ShowAccordionComponent";
-import { addAgents } from "../services/addAndRemoveAgents.mjs";
+import { addAgents, removeAgent } from "../services/addAndRemoveAgents.mjs";
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
@@ -99,18 +99,49 @@ const CCPComponent = () => {
         });
 
       // TERMINATED handler
+      // connect.core.getEventBus().subscribe(connect.EventType.TERMINATED, () => {
+      //   console.log("Logged out / session terminated");
+      //   let logOutAgent;
+      //   let agentLogout = connect.agent((agent) => {
+      //      logOutAgent = agent.getName();
+      //     console.log("Agent Logout: ", logOutAgent);
+      //   });
+      //   let Obj = {
+      //     agentName: logOutAgent,
+      //   };
+      //   console.log("Agent name is ", Obj.agentName);
+      //   removeAgent(Obj);
+      //   setAgent(null);
+      //   setContacts([]);
+      // });
+      // Handle logout requests (from external frame)
+      connect.core.getEventBus().subscribe(connect.EventType.TERMINATE, () => {
+        console.log("TERMINATE event received - performing logout cleanup");
+
+        if (agent) {
+          const Obj = {
+            agentName: agent.getName(),
+            userName: agent._getData().configuration.username,
+          };
+          console.log("Removing agent:", Obj);
+          removeAgent(Obj);
+        }
+
+        setAgent(null);
+        setContacts([]);
+      });
+
+      // Handle CCP self-termination
       connect.core.getEventBus().subscribe(connect.EventType.TERMINATED, () => {
-        console.log("Logged out / session terminated");
-        let logOutAgent;
-        let agentLogout = connect.agent((agent) => {
-           logOutAgent = agent.getName();
-          console.log("Agent Logout: ", logOutAgent);
-        });
-        let Obj = {
-          agentName: logOutAgent,
-        };
-        console.log("Agent name is ", Obj.agentName);
-        removeAgent(Obj);
+        console.log("TERMINATED event received - CCP session ended");
+        if (agent) {
+          const Obj = {
+            agentName: agent.getName(),
+            userName: agent._getData().configuration.username,
+          };
+          removeAgent(Obj);
+        }
+
         setAgent(null);
         setContacts([]);
       });
@@ -122,9 +153,10 @@ const CCPComponent = () => {
 
         let Obj = {
           agentName: newAgent.getName(),
-          username: newAgent._getData().configuration.username,
+          userName: newAgent._getData().configuration.username,
         };
-        addAgents(Obj,instanceAlias);
+        console.log("agent name", Obj);
+        addAgents(Obj, instanceAlias);
 
         newAgent.onStateChange(() => setAgent(newAgent));
         newAgent.onRefresh(() => setAgent(newAgent));
@@ -133,7 +165,7 @@ const CCPComponent = () => {
         setTimeout(() => {
           console.log("Auto-logout after 12h");
 
-          removeAgent(Obj)
+          removeAgent(Obj);
           fetch(`https://${instanceAlias}.my.connect.aws/logout`, {
             credentials: "include",
             mode: "no-cors",

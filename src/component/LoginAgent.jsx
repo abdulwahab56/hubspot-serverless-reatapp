@@ -1,17 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const LoginAgent = () => {
-  const [agents, setAgents] = useState([
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
-    { id: 3, name: "Mike Johnson" },
-    { id: 4, name: "Sarah Williams" },
-  ]);
+  const [agents, setAgents] = useState([]);
 
-  const handleDelete = (id) => {
-    console.log("Delete agent:", id);
-    if (window.confirm("Are you sure you want to delete this agent?")) {
-      setAgents(agents.filter((agent) => agent.id !== id));
+  const getAgents = async()=>{
+    try {
+      const apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/getAgents";
+
+      const response = await fetch(apiURL);
+       if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const resData = await response.json();
+      setAgents(resData.agents)
+    } catch (error) {
+      console.log("error to getting agents",error)
+    }
+  }
+
+
+  useEffect(()=>{
+    getAgents()
+
+  },[])
+
+  const handleDelete = async(agent) => {
+    console.log("Delete agent:", agent);
+    try {
+      const apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/agentLogout";
+
+     const response = await fetch(apiURL,{
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(agent), // ✅ send as object
+        })
+        const resData = await response.json()
+        console.log("remove agent successfully from the",resData)
+        
+      
+    } catch (error) {
+       console.log("error reove agents",error)
     }
   };
 
@@ -39,13 +67,13 @@ const LoginAgent = () => {
                   >
                     <td className="px-6 py-4 text-sm text-gray-700">{index + 1}</td>
                     <td className="px-6 py-4 text-sm text-gray-900 font-medium">
-                      {agent.name}
+                      {agent.agentName}
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleDelete(agent.id)}
-                          className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md transition duration-200"
+                          onClick={() => handleDelete(agent)}
+                          className="px-3 py-1 bg-red-500 hover:bg-red-600 cursor-pointer text-white rounded-md transition duration-200"
                         >
                           Remove
                         </button>

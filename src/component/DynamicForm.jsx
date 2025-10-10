@@ -15,10 +15,24 @@ const DynamicForm = ({fields, onSubmit, buttonText = "submit"}) => {
     setSubmitMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    setSubmitMessage("Field updated successfully!")
+     try {
+      const response = await fetch("https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/noMatchConfiguration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Failed to update setting");
+      const data = await response.json();
+      console.log("Setting updated:", data);
+       setSubmitMessage("Field updated successfully!")
+    } catch (err) {
+      console.error("Error toggling setting:", err);
+    }
+   
     if (onSubmit) {
       onSubmit(formData);
     }

@@ -74,16 +74,6 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-
-        {/* <div className="mt-6 text-center text-sm text-gray-500">
-          Don’t have an account?{" "}
-          <a
-            href="#"
-            className="text-indigo-600 font-semibold hover:underline"
-          >
-            Sign up
-          </a>
-        </div> */}
       </div>
     </div>
   );

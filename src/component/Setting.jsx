@@ -14,16 +14,16 @@ const Setting = () => {
   ];
   const handleFormSubmit = ()=>{}
 
-  const handleToggle = (value) => {
-    console.log("Switch state:", value);
-  };
+  // const handleToggle = (value) => {
+  //   console.log("Switch state:", value);
+  // };
   return (
     <main className="pt-6 px-6 md:px-16 lg:px-32 bg-gray-50">
       <h1 className="text-3xl font-bold mb-6 text-indigo-700">Settings</h1>
       <div className="flex items-center justify-between">
-        <Switch label="Outbound Activity Creation" onToggle={handleToggle} />
-        <Switch label="Queue Selection" onToggle={handleToggle} />
-        <Switch label="Wrap-Up Notes" onToggle={handleToggle} />
+        <Switch label="Outbound Activity Creation"  settingName="Outbound_Activity"/>
+        <Switch label="Queue Selection" settingName="Queue_Selection" />
+        <Switch label="Wrap-Up Notes" settingName="Wrap_Up_Notes" />
       </div>
       <section>
          <h1 className="text-3xl mt-6 font-bold text-indigo-700">

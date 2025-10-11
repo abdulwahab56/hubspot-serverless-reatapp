@@ -75,10 +75,10 @@ const CustomDropdown = () => {
     if (selectedAttribute === attrToRemove) setSelectedAttribute(null);
   };
 
-  const handleSelect = (attr) => {
-    setSelectedAttribute(attr);
-    setDropdownOpen(false);
-  };
+  // const handleSelect = (attr) => {
+  //   setSelectedAttribute(attr);
+  //   setDropdownOpen(false);
+  // };
 
   return (
     <div className="flex flex-col md:flex-row items-start justify-between mt-4 gap-6 py-4">
@@ -121,14 +121,14 @@ const CustomDropdown = () => {
       {/* Right side — dropdown */}
       <div className="w-full md:w-1/2 relative" ref={dropdownRef}>
         <label className="block text-gray-700 font-medium mb-2">
-          Select Attribute
+          Attribute List
         </label>
         <button
           type="button"
           onClick={() => setDropdownOpen((prev) => !prev)}
-          className="w-full flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-900 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+          className="w-full flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-400  hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
         >
-          {selectedAttribute || "Select attribute"}
+          Attribute List
           <span className="ml-2 text-gray-500">▼</span>
         </button>
 
@@ -145,14 +145,14 @@ const CustomDropdown = () => {
                   className="flex justify-between items-center px-4 py-2 hover:bg-indigo-50 cursor-pointer"
                 >
                   <span
-                    onClick={() => handleSelect(attr)}
+                    // onClick={() => handleSelect(attr)}
                     className="flex-1 text-gray-700"
                   >
                     {attr}
                   </span>
                   <button
                     onClick={() => handleRemoveAttribute(attr)}
-                    className="ml-2 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-xs"
+                    className="ml-2 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg cursor-pointer text-xs"
                   >
                     ✕
                   </button>
@@ -162,14 +162,14 @@ const CustomDropdown = () => {
           </div>
         )}
 
-        {selectedAttribute && (
+        {/* {selectedAttribute && (
           <div className="mt-4 p-4 bg-indigo-50 rounded-xl">
             <p className="text-gray-700">
               <span className="font-semibold">Selected:</span>{" "}
               {selectedAttribute}
             </p>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

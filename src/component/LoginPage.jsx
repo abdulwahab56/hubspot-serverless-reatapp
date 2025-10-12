@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const [submitMessage, setSubmitMessage] = useState("");
+   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -13,9 +18,35 @@ const LoginPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    const apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/loginUser";
+    try {
+      const response = await fetch(apiURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(formData)
+      })
+      if (!response.ok) throw new Error("Failed to login");
+      const resData = await response.json();
+      login(resData.username, resData.token);
+      navigate("/admin/home");
+      setSubmitMessage(resData.message)
+      setFormData({
+        username: "",
+        password: "",
+      })
+      setTimeout(() => setSubmitMessage(""), 3000);
+      console.log("Login Successful", resData)
+
+    } catch (error) {
+      console.log("error", error)
+
+    }
     // Add your authentication logic here
   };
 
@@ -43,7 +74,7 @@ const LoginPage = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full text-gray-700 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your username"
             />
           </div>
@@ -62,7 +93,7 @@ const LoginPage = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full text-gray-700 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your password"
             />
           </div>
@@ -74,7 +105,18 @@ const LoginPage = () => {
             Login
           </button>
         </form>
+        {submitMessage && (
+          <div
+            className={`mt-4 p-3 rounded-xl ${submitMessage.includes("successfully")
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+              }`}
+          >
+            {submitMessage}
+          </div>
+        )}
       </div>
+
     </div>
   );
 };

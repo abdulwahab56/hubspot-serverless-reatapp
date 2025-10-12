@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  // const [isOpen, setIsOpen] = useState(false);
+     const { logout } = useAuth();
+    const navigate = useNavigate();
+
+     const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
 
   return (
     <nav className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md fixed w-full top-0 z-50">
@@ -24,6 +32,7 @@ const Navbar = () => {
             <Link to="/admin/login-agent" className="hover:text-gray-200 transition-colors">Login Agent</Link>
           </li>
         </ul>
+        <button onClick={handleLogout} className=" sm:w-auto cursor-pointer sm:min-w-[120px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold  py-3 px-5 rounded-xl shadow-md transition duration-300 ease-in-out">Logout</button>
 
         {/* Mobile Toggle */}
         {/* <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">

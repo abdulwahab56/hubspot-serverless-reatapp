@@ -135,7 +135,7 @@ const CustomDropdown = () => {
           />
           <button
             onClick={handleSubmit}
-            className="w-[102px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition"
+            className="w-[102px] cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition"
           >
             Submit
           </button>
@@ -161,14 +161,14 @@ const CustomDropdown = () => {
         <button
           type="button"
           onClick={() => setDropdownOpen((prev) => !prev)}
-          className="w-full flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-400  hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+          className="w-full cursor-pointer flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-400  hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
         >
           Attribute List
           <span className="ml-2 text-gray-500">▼</span>
         </button>
 
         {dropdownOpen && (
-          <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+          <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto cursor-pointer">
             {attributes.length && attributes.length === 0 ? (
               <p className="text-gray-500 text-center py-3">
                 No attributes available

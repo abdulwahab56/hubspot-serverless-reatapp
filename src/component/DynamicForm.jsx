@@ -139,7 +139,7 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
       const resData = response.json();
       console.log("remove setting from the DB", resData)
       await getDispositionFromDB()
-      setSubmitMessage(`${data.message}`)
+      setSubmitMessage(`${resData.message}`)
       setTimeout(() => setSubmitMessage(""), 3000);
 
     } catch (error) {
@@ -176,7 +176,7 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
 
         <button
           onClick={handleSubmit}
-          className="w-[235px] mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl shadow-md transition duration-300 ease-in-out"
+          className="w-[235px] mt-8 bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white font-semibold py-3 rounded-xl shadow-md transition duration-300 ease-in-out"
         >
           {buttonText}
         </button>
@@ -195,11 +195,11 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
       {dynamicField && (
         <div className="flex flex-col md:flex-row items-start justify-between gap-2 w-[89%]">
           {/* Inbound Dropdown */}
-          <div className="w-full md:w-1/2 relative" ref={dropdownRef}>
+          <div className="w-full md:w-1/2 relative cursor-pointer" ref={dropdownRef}>
             <button
               type="button"
               onClick={() => setDropdownOpen((prev) => !prev)}
-              className="w-full flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full flex cursor-pointer justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
             >
               Inbound Disposition List
               <span className="ml-2 text-gray-500">▼</span>
@@ -240,11 +240,11 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
           </div>
 
           {/* Outbound Dropdown */}
-          <div className="w-full md:w-1/2 relative" ref={dropdownsRef}>
+          <div className="w-full md:w-1/2 relative cursor-pointer" ref={dropdownsRef}>
             <button
               type="button"
               onClick={() => setDropdownOpens((prev) => !prev)}
-              className="w-full flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full cursor-pointer flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
             >
               Outbound Disposition List
               <span className="ml-2 text-gray-500">▼</span>

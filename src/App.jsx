@@ -8,6 +8,7 @@ import Install from "./component/Install";
 import OauthCallback from "./component/OauthCallback";
 import LoginPage from "./component/LoginPage";
 import Admin from "./component/Admin";
+import ProtectedRoute from "./component/ProtectedRoute";
 
 
 
@@ -40,7 +41,12 @@ const App = () => {
         )}
 
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin/*" element={<Admin />} />
+        <Route path="/admin/*" element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+          
+          } />
       </Routes>
     </>
   );

@@ -1,6 +1,7 @@
 // src/component/Admin.jsx
 import React from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route, useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 import Navbar from "./navbar";
 import Setting from "./Setting";
 import LoginAgent from "./LoginAgent";
@@ -8,6 +9,7 @@ import Home from "./Home";
 import LicenseUpdate from "./LicenseUpdate";
 
 const Admin = () => {
+
   return (
     <>
       <Navbar />

@@ -78,7 +78,7 @@ const LicenseUpdate = () => {
   };
 
   return (
-    <div className="pt-6 px-6 md:px-16 lg:px-12 bg-gray-200 mt-2 ml-32 mr-32 rounded-2xl shadow-2xl pb-6">
+    <div className="pt-6 px-6 md:px-16 lg:px-12 bg-gray-200 mt-28 ml-32 mr-32 rounded-xl shadow-2xl pb-6 flex flex-col">
       <h1 className="text-4xl font-bold text-indigo-700 mb-4">
         License Information
       </h1>
@@ -97,7 +97,7 @@ const LicenseUpdate = () => {
           <div className="rounded-2xl">
             <label
               htmlFor="licenseKey"
-              className="block text-gray-700 text-start font-medium mb-2"
+              className="block text-gray-700 text-start font-bold mb-2"
             >
               License Key
             </label>
@@ -111,12 +111,12 @@ const LicenseUpdate = () => {
                 required
                 onChange={handleChange}
                 placeholder="Enter your License Key"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-400 outline-none transition duration-300 ease-in-out"
+                className="w-full px-4 py-2 rounded text-[13.5px] border border-gray-300 bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-400 outline-none transition duration-300 ease-in-out"
               />
 
               <button
                 onClick={handleSubmit}
-                className=" sm:w-auto sm:min-w-[150px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition duration-300 ease-in-out"
+                className=" sm:w-auto text-[13.5px] sm:min-w-[130px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-3 rounded shadow-md transition duration-300 ease-in-out"
               >
                 Submit
               </button>

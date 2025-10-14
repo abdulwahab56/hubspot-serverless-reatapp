@@ -36,15 +36,15 @@ const CustomDropdown = () => {
   }, []);
 
   // close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       setDropdownOpen(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,14 +81,18 @@ const CustomDropdown = () => {
   const handleRemoveAttribute = async (attrToRemove) => {
     let apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/settingRemoveItem"
     setIsLoading(true);
-    setSubmitMessage("")
+    setSubmitMessage("");
+    let body = {
+      attrToRemove,
+      removerIdentifyer: "attri"
+    }
     try {
       const response = await fetch(apiURL, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(attrToRemove)
+        body: JSON.stringify(body)
       })
       if (!response.ok) throw new Error("Failed to remove setting");
       const resData = response.json();
@@ -116,10 +120,10 @@ const CustomDropdown = () => {
   // };
 
   return (
-    <div className="flex flex-col md:flex-row items-start justify-between mt-4 gap-6 py-4">
+    <div className="flex flex-col md:flex-row items-start justify-between gap-6 py-4">
       {/* Left side — input */}
       <div className="w-full md:w-1/2">
-        <label className="block text-gray-700 text-start font-medium mb-2">
+        <label className="block text-gray-700 text-[13.5px] text-start font-medium mb-2">
           Attribute
         </label>
         <div className="flex items-center gap-2">
@@ -131,11 +135,11 @@ const CustomDropdown = () => {
               setFormData({ ...formData, attribute: e.target.value })
             }
             placeholder="Enter your attribute"
-            className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-400 outline-none transition"
+            className="w-full px-4 text-[13.5px] py-1 rounded border border-gray-300 bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-400 outline-none transition"
           />
           <button
             onClick={handleSubmit}
-            className="w-[102px] cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition"
+            className="w-[102px] text-[13.5px] cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-1.5 rounded shadow-md transition"
           >
             Submit
           </button>
@@ -154,30 +158,30 @@ const CustomDropdown = () => {
 
 
       {/* Right side — dropdown */}
-      <div className="w-full md:w-1/2 relative" ref={dropdownRef}>
-        <label className="block text-gray-700 font-medium mb-2">
+      <div className="w-full md:w-1/2 relative z-50" ref={dropdownRef}>
+        <label className="block text-[13.5px] text-gray-700 font-medium mb-2">
           Attribute List
         </label>
         <button
           type="button"
           onClick={() => setDropdownOpen((prev) => !prev)}
-          className="w-full cursor-pointer flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-400  hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+          className="w-full cursor-pointer text-[13.5px] flex justify-between items-center px-6 py-1.5 rounded border border-gray-300 bg-gray-100 text-gray-400  hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
         >
           Attribute List
-          <span className="ml-2 text-gray-500">▼</span>
+          <span className="ml-1 text-gray-500">▼</span>
         </button>
 
         {dropdownOpen && (
-          <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto cursor-pointer">
-            {attributes.length && attributes.length === 0 ? (
-              <p className="text-gray-500 text-center py-3">
+          <div className="absolute z-10  w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto cursor-pointer">
+            { attributes.length === 0 ? (
+              <p className="text-gray-500 text-[13.5px] text-center py-2">
                 No attributes available
               </p>
             ) : (
               attributes.map((attr, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+                  className="flex justify-between  items-center px-4 py-2 hover:bg-indigo-50 cursor-pointer"
                 >
                   <span
                     // onClick={() => handleSelect(attr)}

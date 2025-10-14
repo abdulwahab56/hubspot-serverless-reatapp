@@ -101,6 +101,10 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
 
 
   const handleRemoveOutbound = async (attrToRemove) => {
+     let body = {
+      attrToRemove,
+      removerIdentifyer: "outbound"
+    }
     let apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/settingRemoveItem"
     setLoading(true)
     try {
@@ -109,14 +113,14 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(attrToRemove)
+        body: JSON.stringify(body)
       })
       if (!response.ok) throw new Error("Failed to remove setting");
-      const resData = response.json();
+      const resData = await response.json();
       console.log("remove setting from the DB", resData)
       await getDispositionFromDB();
       setLoading(false)
-      setSubmitMessage(`${data.message}`)
+      setSubmitMessage(`${resData.message}`)
       setTimeout(() => setSubmitMessage(""), 3000);
 
     } catch (error) {
@@ -126,6 +130,10 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
     }
   };
   const handleRemoveInbound = async (attrToRemove) => {
+     let body = {
+      attrToRemove,
+      removerIdentifyer: "inbound"
+    }
     let apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/settingRemoveItem"
     try {
       const response = await fetch(apiURL, {
@@ -133,10 +141,10 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(attrToRemove)
+        body: JSON.stringify(body)
       })
       if (!response.ok) throw new Error("Failed to remove setting");
-      const resData = response.json();
+      const resData =await response.json();
       console.log("remove setting from the DB", resData)
       await getDispositionFromDB()
       setSubmitMessage(`${resData.message}`)
@@ -151,11 +159,11 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
 
   return (
     <>
-      <div className='rounded-2xl py-4 w-full h-full flex items-center justify-between gap-2 h-fit'>
+      <div className='rounded-2xl  w-full h-full flex items-center justify-between gap-2'>
         {
           fields.map((field) => (
             <div key={field.name} className='w-full'>
-              <label htmlFor={field.name} className='block text-gray-700 font-medium mb-2'>
+              <label htmlFor={field.name} className='block text-gray-700 text-[13.5px] font-bold mb-2'>
                 {field.label}
               </label>
               <input
@@ -167,7 +175,7 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
                 onChange={handleChange}
                 placeholder={field.placeholder || `Enter your ${field.label.toLowerCase()}`}
                 required={field.required || false}
-                className="w-full px-4 py-3 rounded-xl border  border-gray-300 bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-400 outline-none transition duration-300 ease-in-out"
+                className="w-full px-4 py-2 rounded border text-[13.5px]  border-gray-300 bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-400 outline-none transition duration-300 ease-in-out"
               />
             </div>
 
@@ -176,7 +184,7 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
 
         <button
           onClick={handleSubmit}
-          className="w-[235px] mt-8 bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white font-semibold py-3 rounded-xl shadow-md transition duration-300 ease-in-out"
+          className="w-[235px] text-[13.5px] mt-7 bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white font-semibold py-2 rounded shadow-md transition duration-300 ease-in-out"
         >
           {buttonText}
         </button>
@@ -193,22 +201,23 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
         </div>
       )}
       {dynamicField && (
-        <div className="flex flex-col md:flex-row items-start justify-between gap-2 w-[89%]">
+
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 max-w-[1010px] mt-2 ">
           {/* Inbound Dropdown */}
           <div className="w-full md:w-1/2 relative cursor-pointer" ref={dropdownRef}>
             <button
               type="button"
               onClick={() => setDropdownOpen((prev) => !prev)}
-              className="w-full flex cursor-pointer justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full flex text-[13.5px] cursor-pointer justify-between items-center px-6 py-2 rounded border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
             >
               Inbound Disposition List
               <span className="ml-2 text-gray-500">▼</span>
             </button>
 
             {dropdownOpen && (
-              <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto">
                 {inboundDisposition.length === 0 ? (
-                  <p className="text-gray-500 text-center py-3">
+                  <p className="text-gray-500 text-[13.5px] text-center py-2">
                     No Inbound Disposition available
                   </p>
                 ) : (
@@ -244,16 +253,16 @@ const DynamicForm = ({ fields, onSubmit, buttonText = "submit", dynamicField }) 
             <button
               type="button"
               onClick={() => setDropdownOpens((prev) => !prev)}
-              className="w-full cursor-pointer flex justify-between items-center px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full text-[13.5px] cursor-pointer flex justify-between items-center px-6 py-2 rounded border border-gray-300 bg-gray-100 text-gray-600 hover:bg-white focus:ring-2 focus:ring-indigo-400 transition"
             >
               Outbound Disposition List
               <span className="ml-2 text-gray-500">▼</span>
             </button>
 
             {dropdownOpens && (
-              <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute text-[13.5px] z-10 mt-2 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto">
                 {outboundDisposition.length === 0 ? (
-                  <p className="text-gray-500 text-center py-3">
+                  <p className="text-gray-500 text-center py-2">
                     No Outbound Disposition available
                   </p>
                 ) : (

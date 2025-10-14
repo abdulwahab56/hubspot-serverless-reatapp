@@ -17,7 +17,8 @@ const GlobalStore = {
   multiMatch: false,
   contact_id: null,
   engagement_body: {},
-  agentId: null
+  agentId: null,
+  loggedInAgent: null
 };
 
 export default GlobalStore;

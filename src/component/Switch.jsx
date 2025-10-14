@@ -50,7 +50,7 @@ const Switch = ({ label = "", settingName }) => {
 
   return (
     <div className="flex items-center justify-between space-x-4 bg-white shadow-lg py-4 px-6 rounded-2xl gap-4 sm:gap-8 md:gap-12 lg:gap-34">
-      {label && <span className="text-gray-800 font-medium">{label}</span>}
+      {label && <span className="text-gray-800 text-[13.5px] font-medium">{label}</span>}
 
       <label className="relative inline-block w-12 h-[20px] cursor-pointer select-none">
         <input
@@ -63,7 +63,7 @@ const Switch = ({ label = "", settingName }) => {
         <div className="absolute inset-0 rounded-full border-4 border-gray-300 bg-gradient-to-b from-gray-300 to-gray-400 shadow-inner peer-checked:from-green-300 peer-checked:to-green-500 transition-all duration-300" />
 
         <span
-          className={`absolute top-1/2 -translate-y-1/2 left-[-34%] h-3 w-3 rounded-full border ${
+          className={`absolute top-1/2 -translate-y-1/2 left-[-36%] h-3 w-3 rounded-full border ${
             checked
               ? "bg-gray-400 border-gray-700 shadow-[0_0_6px_rgba(0,0,0,0.4)]"
               : "bg-red-400 border-red-700 shadow-[0_0_8px_rgba(255,50,50,0.6)]"
@@ -71,7 +71,7 @@ const Switch = ({ label = "", settingName }) => {
         ></span>
 
         <span
-          className={`absolute top-1/2 -translate-y-1/2 right-[-33%] h-3 w-3 rounded-full border ${
+          className={`absolute top-1/2 -translate-y-1/2 right-[-38%] h-3 w-3 rounded-full border ${
             checked
               ? "bg-green-400 border-green-700 shadow-[0_0_8px_rgba(0,255,0,0.6)]"
               : "bg-gray-400 border-gray-700 shadow-[0_0_6px_rgba(0,0,0,0.4)]"

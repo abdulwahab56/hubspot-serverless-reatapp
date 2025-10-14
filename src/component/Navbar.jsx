@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate,NavLink } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import logoImage from "../assets/logo.png"
 
 const Navbar = () => {
      const { logout } = useAuth();
@@ -15,7 +16,7 @@ const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="text-2xl font-bold">Tailwind CSS</div>
+        <div className=" bg-gradient-to-r from-purple-500 to-indigo-600  cursor-pointer w-[248px] rounded"><img src={logoImage}/></div>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-8 font-medium">
@@ -32,7 +33,7 @@ const Navbar = () => {
             <Link to="/admin/login-agent" className="hover:text-gray-200 transition-colors">Login Agent</Link>
           </li>
         </ul>
-        <button onClick={handleLogout} className=" sm:w-auto cursor-pointer sm:min-w-[120px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold  py-3 px-5 rounded-xl shadow-md transition duration-300 ease-in-out">Logout</button>
+        <button onClick={handleLogout} className=" sm:w-auto text-[13.5px] cursor-pointer sm:min-w-[120px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold  py-2 px-3 rounded shadow-md transition duration-300 ease-in-out">Logout</button>
 
         {/* Mobile Toggle */}
         {/* <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">

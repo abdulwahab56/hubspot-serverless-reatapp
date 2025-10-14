@@ -1,4 +1,4 @@
-import React, { useState, } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
@@ -10,6 +10,16 @@ const LoginPage = () => {
   const [submitMessage, setSubmitMessage] = useState("");
    const navigate = useNavigate();
   const { login } = useAuth();
+
+  useEffect(()=>{
+     const token = localStorage.getItem("adminToken");
+    const userData = localStorage.getItem("adminUser");
+    
+    if (token && userData) {
+     navigate("/admin/home")
+    }
+
+  },[])
 
   const handleChange = (e) => {
     setFormData({

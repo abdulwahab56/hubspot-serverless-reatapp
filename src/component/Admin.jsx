@@ -9,6 +9,7 @@ import Home from "./Home";
 import LicenseUpdate from "./LicenseUpdate";
 
 const Admin = () => {
+  const Navigate = useNavigate()
 
   return (
     <>
@@ -17,10 +18,13 @@ const Admin = () => {
       {/* Page content changes here */}
       <div className="p-8 bg-gray-50 min-h-screen pt-14">
         <Routes>
+          <Route path="/" element={<Navigate to="/admin/home" replace />} />
           <Route path="/home" element={<Home />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/license-update" element={<LicenseUpdate />} />
           <Route path="/login-agent" element={<LoginAgent />} />
+
+          <Route path="*" element={<Navigate to="/admin/home" replace />} />
         </Routes>
       </div>
     </>

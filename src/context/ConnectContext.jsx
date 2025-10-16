@@ -11,6 +11,7 @@ export const ConnectProvider = ({ children }) => {
   const [updateAttribute, setUpdateAttribute] = useState(null);
   const [recordingToggle, setRecordingToggle] = useState(false);
   const [pause, setPause] = useState(null)
+  const [disposition, setDisposition] = useState(null);
 
   // Helper: set or update a contact
   const updateContact = (contactId, data) => {
@@ -56,7 +57,9 @@ export const ConnectProvider = ({ children }) => {
         recordingToggle, 
         setRecordingToggle,
         pause, 
-        setPause
+        setPause,
+        disposition, 
+        setDisposition
       }}
     >
       {children}

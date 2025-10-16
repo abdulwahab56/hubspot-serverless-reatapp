@@ -22,7 +22,7 @@ const LoginAgent = () => {
   useEffect(()=>{
     getAgents()
 
-  },[])
+  },[agents])
 
   const handleDelete = async(agent) => {
     console.log("Delete agent:", agent);

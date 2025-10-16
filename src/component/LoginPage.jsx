@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import logoImage from "../assets/logo.png"
+import logoImage from "../assets/logo.png";
+import useConfig from "../hooks/useConfig";
 
 const LoginPage = () => {
+  const envConfig = useConfig();
+
+  const ApiBaseURL = envConfig.API_BASE_URL;
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [submitMessage, setSubmitMessage] = useState("");
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { login } = useAuth();
 
-  useEffect(()=>{
-     const token = localStorage.getItem("adminToken");
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
     const userData = localStorage.getItem("adminUser");
-    
-    if (token && userData) {
-     navigate("/admin/home")
-    }
 
-  },[])
+    if (token && userData) {
+      navigate("/admin/home");
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -32,40 +35,38 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    const apiURL = "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/loginUser";
+    const apiURL =`${ApiBaseURL}/loginUser`;
+      // "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/loginUser";
     try {
       const response = await fetch(apiURL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
 
-        body: JSON.stringify(formData)
-      })
+        body: JSON.stringify(formData),
+      });
       if (response.ok) {
-         const resData = await response.json();
-      login(resData.username, resData.token);
-      setSubmitMessage(resData.message)
-      navigate("/admin/home");
-      
-      setFormData({
-        username: "",
-        password: "",
-      })
-      setTimeout(() => setSubmitMessage(""), 3000);
-      console.log("Login Successful", resData)
-      }else{
-        setSubmitMessage("Invalid username or password")
-      setTimeout(() => setSubmitMessage(""), 3000);
+        const resData = await response.json();
+        login(resData.username, resData.token);
+        setSubmitMessage(resData.message);
+        navigate("/admin/home");
+
+        setFormData({
+          username: "",
+          password: "",
+        });
+        setTimeout(() => setSubmitMessage(""), 3000);
+        console.log("Login Successful", resData);
+      } else {
+        setSubmitMessage("Invalid username or password");
+        setTimeout(() => setSubmitMessage(""), 3000);
       }
-     
-
     } catch (error) {
-      console.log("error", error)
-       setSubmitMessage(resData.message)
+      console.log("error", error);
+      setSubmitMessage(resData.message);
       setTimeout(() => setSubmitMessage(""), 3000);
-      console.log("Login Successful", resData)
-
+      console.log("Login Successful", resData);
     }
     // Add your authentication logic here
   };
@@ -73,10 +74,8 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-4">
       <div className="bg-white shadow-2xl rounded-2xl w-full max-w-md p-8 transform transition-all hover:scale-[1.01]">
-        <img src={logoImage}/>
-        <p className=" text-gray-500 mb-8 mt-2">
-          Please login to your account
-        </p>
+        <img src={logoImage} />
+        <p className=" text-gray-500 mb-8 mt-2">Please login to your account</p>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
@@ -125,16 +124,16 @@ const LoginPage = () => {
         </form>
         {submitMessage && (
           <div
-            className={`mt-4 p-3 rounded-xl ${submitMessage.includes("successfully")
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-              }`}
+            className={`mt-4 p-3 rounded-xl ${
+              submitMessage.includes("successfully")
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
           >
             {submitMessage}
           </div>
         )}
       </div>
-
     </div>
   );
 };

@@ -13,6 +13,7 @@ import useConfig from "../hooks/useConfig";
 import ShowAccordionComponent from "../component/ShowAccordionComponent";
 import { addAgents, removeAgent } from "../services/addAndRemoveAgents.mjs";
 import GlobalStore from "../global/globalStore";
+import DipositionWrapUpNotes from "./DipositionWrapUpNotes";
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
@@ -346,6 +347,7 @@ const CCPComponent = () => {
       ) : (
         <ShowAccordionComponent showAccordion={showAccordion} />
       )}
+      <DipositionWrapUpNotes/>
       <div
         ref={containerRef}
         className="w-[350px] h-[90vh] max-h-[600px] min-h-[400px]"

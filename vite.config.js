@@ -12,5 +12,5 @@ export default defineConfig({
   build: {
     outDir: "dist", // default, but explicit is good
   },
-  base: "./", // ✅ important for S3, use relative paths
+  base: "/", // ✅ important for S3, use relative paths
 })

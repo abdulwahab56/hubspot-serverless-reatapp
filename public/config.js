@@ -10,6 +10,7 @@ window.AUI_CONFIG = {
   CONNECT_RECORDING_BUCKET: "new-bucket-for-metrics",
   
   // Connector Configuration
-  APP_BASE_URL: "https://localhost", // or "https://octavebytes.net/lab"
-  COUNTRY_CODES: ["+1", "+61", "+44"] // converted to array for easier use
+  COUNTRY_CODES: ["+1", "+61", "+44"], // converted to array for easier use
+
+  API_BASE_URL: "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev",
 };

@@ -3,13 +3,16 @@ import { processOnEnded } from "../services/processOnEnded";
 import GlobalStore from "../global/globalStore";
 
 const useOnEnded = () => {
-  const { removeContact, setRecordingToggle, setPause } = useConnect();
+  const { removeContact, setRecordingToggle, setPause, setDisposition, setShowAccordion } = useConnect();
   
 
   return (contact) => {
     GlobalStore.attribute = contact.getAttributes();
     setRecordingToggle(false);
+    setShowAccordion(null);
     setPause(null);
+    GlobalStore.isMissCall ? setDisposition(false) : setDisposition(true)
+    
     TbSettingsPause
     GlobalStore.status = contact.getStatus().type;
     GlobalStore.queue = contact.getQueue().name;

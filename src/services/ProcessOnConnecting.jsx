@@ -25,6 +25,8 @@ export function processOnConnecting(
 
   GlobalStore.contact_id = contact.contactId;
   const status = contact.getStatus();
+  GlobalStore.status = status;
+  console.log("Call status", GlobalStore.status);
   GlobalStore.channelType = contact.getType();
 
   // ✅ Save callStartTime globally
@@ -70,7 +72,7 @@ export function processOnConnecting(
     callStartTime: GlobalStore.callStartTime,
     callState: "CALL_START",
     engagement_id: GlobalStore.engagement_id,
-    channelType : GlobalStore.channelType,
+    channelType: GlobalStore.channelType,
   };
 }
 
@@ -222,8 +224,11 @@ const UpdateContactAttribute = async (contactId) => {
   };
 
   try {
-    const response = fetch(apiURL, {
+    const response = await fetch(apiURL, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(obj),
     });
     if (!response.ok) {
@@ -251,6 +256,9 @@ const updateCallLink = async (oldContactId, contactId, callId, url) => {
   try {
     const response = fetch(apiURL, {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(obj),
     });
     if (!response.ok) {
@@ -333,7 +341,9 @@ export const pauseRecording = async (agentId) => {
     agentId,
   };
 
-  console.log(`Request to pause recording initiated. Contact Id: ${GlobalStore.contact_id}`);
+  console.log(
+    `Request to pause recording initiated. Contact Id: ${GlobalStore.contact_id}`
+  );
 
   try {
     const response = await fetch(apiURL, {

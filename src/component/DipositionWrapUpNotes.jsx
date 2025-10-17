@@ -1,19 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useConnect } from "../context/ConnectContext";
+import GlobalStore from "../global/globalStore";
 
 const DipositionWrapUpNotes = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedOption, setSelectedOption] = useState("");
-  const {setDisposition} = useConnect();
+  const [dispositionList, setDispositionList] = useState([]);
 
   const handleSelectChange = (e) => {
     const val = e.target.value
     setSelectedOption(e.target.value);
-    setDisposition(val)
+    // setDisposition(val)
     setIsOpen(false);
     console.log("Selected option:", e.target.value);
   };
+
+  const getDataFromDB = async () => {
+    let wrapUpNoteShow;
+      try {
+        const apiURL =
+          "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/getdecrpytedData";
+  
+        const response = await fetch(apiURL);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const resData = await response.json();
+        if(GlobalStore.callType === "inbound"){
+            wrapUpNoteShow = resData.config.INBOUND_DISPOSITIONS
+            setDispositionList(wrapUpNoteShow)
+        }
+
+        if(GlobalStore.callType === "outbound"){
+            wrapUpNoteShow = resData.config.OUTBOUND_DISPOSITIONS
+            setDispositionList(wrapUpNoteShow)
+        }
+        
+  
+        console.log("responseData from disposition", resData)
+      } catch (error) {
+        console.log("error", error)
+      }
+    };
+  
+    useEffect(() => {
+  
+      getDataFromDB()
+    }, []);
 
   return (
     <div className="relative w-[350px]">
@@ -48,10 +82,11 @@ const DipositionWrapUpNotes = () => {
               className="w-full px-3 py-2 text-[13.5px] bg-[#1e1e1e] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Select an option</option>
-              <option value="United States">United States</option>
+              {dispositionList.map((item)=> <option value="item">{item}</option>)}
+              {/* <option value="United States">United States</option>
               <option value="Canada">Canada</option>
               <option value="France">France</option>
-              <option value="Germany">Germany</option>
+              <option value="Germany">Germany</option> */}
             </select>
           </div>
 

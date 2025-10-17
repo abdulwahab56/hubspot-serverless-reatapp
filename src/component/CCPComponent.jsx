@@ -29,6 +29,7 @@ const CCPComponent = () => {
     recordingToggle,
     pause,
     setPause,
+    disposition,
   } = useConnect();
   const envConfig = useConfig();
 
@@ -328,13 +329,12 @@ const CCPComponent = () => {
               <BsPlayBtn className="size-5 text-white" />
             </button>
             <span className="p-2 rounded bg-amber-900">
-               <HiOutlineStop
-              className={`size-5 ${
-                recordingToggle ? "text-red-600 animate-pulse" : "text-white"
-              }`}
-            />
+              <HiOutlineStop
+                className={`size-5 ${
+                  recordingToggle ? "text-red-600 animate-pulse" : "text-white"
+                }`}
+              />
             </span>
-           
           </span>
         </div>
       ) : (
@@ -347,7 +347,8 @@ const CCPComponent = () => {
       ) : (
         <ShowAccordionComponent showAccordion={showAccordion} />
       )}
-      <DipositionWrapUpNotes/>
+      {disposition ? <DipositionWrapUpNotes /> : ""}
+
       <div
         ref={containerRef}
         className="w-[350px] h-[90vh] max-h-[600px] min-h-[400px]"

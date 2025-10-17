@@ -14,7 +14,7 @@ const ShowAccordionComponent = ({ showAccordion }) => {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-[350px]">
       {/* Accordion Header */}
       <button
         onClick={() => setIsOpen(!isOpen)}

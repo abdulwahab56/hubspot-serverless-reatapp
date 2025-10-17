@@ -2,9 +2,10 @@ import { useConnect } from "../context/ConnectContext";
 import { processOnDestroy } from "../services/processOnDestroy";
 
 const useOnDestroy = () => {
-  const { removeContact,newOutboundContact, setNewOutboundContact, setShowAccordion } = useConnect();
+  const { removeContact,newOutboundContact, setNewOutboundContact, setShowAccordion, setDisposition } = useConnect();
 
   return (contact) => {
+    setDisposition(false)
       let agentName = null;
     connect.agent((agent) => {
       agentName = agent.getName();

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useReducer } from "react";
+import React, { createContext, useContext, useState, useReducer, useEffect } from "react";
 
 const ConnectContext = createContext();
 export const ConnectProvider = ({ children }) => {
@@ -11,7 +11,8 @@ export const ConnectProvider = ({ children }) => {
   const [updateAttribute, setUpdateAttribute] = useState(null);
   const [recordingToggle, setRecordingToggle] = useState(false);
   const [pause, setPause] = useState(null)
-  const [disposition, setDisposition] = useState(null);
+  const [disposition, setDisposition] = useState(false);
+
 
   // Helper: set or update a contact
   const updateContact = (contactId, data) => {

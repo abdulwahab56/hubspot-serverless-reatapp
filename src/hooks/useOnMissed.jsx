@@ -7,6 +7,8 @@ const useOnMissed = () => {
 
   return (contact) => {
     const result = processOnMissed(contact, isMissCall, setIsMissCall, newOutboundContact);
+    console.log("call on missed call state")
+    
 
     updateContacts(result.contactId, {
       callState: result.callState,

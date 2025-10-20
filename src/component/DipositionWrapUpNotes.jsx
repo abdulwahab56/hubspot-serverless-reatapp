@@ -7,13 +7,26 @@ const DipositionWrapUpNotes = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedOption, setSelectedOption] = useState("");
   const [dispositionList, setDispositionList] = useState([]);
+  const [wrapUpNotes, setWrapUpNotes] = useState("");
 
   const handleSelectChange = (e) => {
-    const val = e.target.value
     setSelectedOption(e.target.value);
     // setDisposition(val)
     setIsOpen(false);
     console.log("Selected option:", e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    GlobalStore.disposition = selectedOption;
+    GlobalStore.wrapupNote = wrapUpNotes;
+    console.log({
+      selectedOption,
+      wrapUpNotes
+    });
+    setWrapUpNotes(" ");
+    setSelectedOption(" ");
+    setIsOpen(false);
   };
 
   const getDataFromDB = async () => {
@@ -36,8 +49,6 @@ const DipositionWrapUpNotes = () => {
             wrapUpNoteShow = resData.config.OUTBOUND_DISPOSITIONS
             setDispositionList(wrapUpNoteShow)
         }
-        
-  
         console.log("responseData from disposition", resData)
       } catch (error) {
         console.log("error", error)
@@ -70,7 +81,7 @@ const DipositionWrapUpNotes = () => {
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         } overflow-hidden`}
       >
-        <form className="p-1 space-y-4">
+        <form className="p-1 space-y-4" onSubmit={handleSubmit}>
           {/* Disposition Dropdown */}
           <div>
             <label className="block text-[13.5px] text-sm font-medium text-gray-300 mb-2">
@@ -82,7 +93,7 @@ const DipositionWrapUpNotes = () => {
               className="w-full px-3 py-2 text-[13.5px] bg-[#1e1e1e] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Select an option</option>
-              {dispositionList.map((item)=> <option value="item">{item}</option>)}
+              {dispositionList.map((item,index)=> <option key={index} value={item}>{item}</option>)}
               {/* <option value="United States">United States</option>
               <option value="Canada">Canada</option>
               <option value="France">France</option>
@@ -97,6 +108,8 @@ const DipositionWrapUpNotes = () => {
             </label>
             <textarea
               placeholder="Enter wrap-up notes here..."
+              value={wrapUpNotes}
+              onChange={(e) => setWrapUpNotes(e.target.value)}
               className="w-full px-3 py-2 tex-[13.5px] bg-[#1e1e1e] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
               rows={4}
             ></textarea>

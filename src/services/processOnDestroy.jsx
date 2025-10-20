@@ -138,7 +138,7 @@ export function processOnDestroy(
       obj.contactId = contact.contactId || engagement_body.contactId;
       obj.callStartTime = GlobalStore.call_start_time;
       obj.isRecordingEnable = recordingEnable;
-      // obj.dispositionCode = disposition;
+      obj.dispositionCode = GlobalStore.disposition;
       // obj.wrapupNote = wrapupNote;
       obj.hubspotContactId = GlobalStore.hubSpot_contact_id;
     } else {
@@ -172,7 +172,8 @@ export function processOnDestroy(
     GlobalStore.contact_id = null;
     GlobalStore.isMissCall = false;
     GlobalStore.multiMatch = false;
-    GlobalStore.agentId = null
+    GlobalStore.agentId = null;
+    GlobalStore.disposition = null;
     setShowAccordion(null);
     // newOutboundContact = false;
     // callState = null;

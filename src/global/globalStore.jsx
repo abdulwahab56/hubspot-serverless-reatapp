@@ -18,7 +18,10 @@ const GlobalStore = {
   contact_id: null,
   engagement_body: {},
   agentId: null,
-  loggedInAgent: null
+  loggedInAgent: null,
+  disposition: null,
+  wrapupNote: null
+
 };
 
 export default GlobalStore;

@@ -12,6 +12,7 @@ export const ConnectProvider = ({ children }) => {
   const [recordingToggle, setRecordingToggle] = useState(false);
   const [pause, setPause] = useState(null)
   const [disposition, setDisposition] = useState(false);
+  const [outBoundCall, setOutBoundCall] = useState("")
 
 
   // Helper: set or update a contact
@@ -60,7 +61,9 @@ export const ConnectProvider = ({ children }) => {
         pause, 
         setPause,
         disposition, 
-        setDisposition
+        setDisposition,
+        outBoundCall, 
+        setOutBoundCall
       }}
     >
       {children}

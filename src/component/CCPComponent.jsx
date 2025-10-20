@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdOutlinePausePresentation } from "react-icons/md";
 import { BsPlayBtn } from "react-icons/bs";
 import { HiOutlineStop } from "react-icons/hi";
@@ -14,6 +14,7 @@ import ShowAccordionComponent from "../component/ShowAccordionComponent";
 import { addAgents, removeAgent } from "../services/addAndRemoveAgents.mjs";
 import GlobalStore from "../global/globalStore";
 import DipositionWrapUpNotes from "./DipositionWrapUpNotes";
+import QueueSelectionOutBoundCall from "./QueueSelectionOutBoundCall"
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
@@ -21,6 +22,7 @@ let instanceAlias;
 
 const CCPComponent = () => {
   const containerRef = useRef(null);
+  const [agentsLists, setAgentsLists] =useState("");
   const {
     agent,
     setAgent,
@@ -30,6 +32,7 @@ const CCPComponent = () => {
     pause,
     setPause,
     disposition,
+    outBoundCall
   } = useConnect();
   const envConfig = useConfig();
 
@@ -161,6 +164,21 @@ const CCPComponent = () => {
         };
         console.log("agent name", Obj);
         addAgents(Obj, instanceAlias);
+        const agentsProfile = newAgent.getRoutingProfile();
+        const list = agentsProfile.queues.filter((queue)=> queue.name !== null)
+        setAgentsLists(list);
+
+        // const {phoneNumber, selectedOption} = outBoundCall;
+        //  let endpoint = this.connect.Endpoint.byPhoneNumber(phoneNumber);
+        //  newAgent.connect(endpoint, {
+        //   queueARN: selectedOption,
+        //   success: function(data){
+        //     console.log("Make call success", data)
+        //   },
+        //   failure: function(error){
+        //     console.error('MakeCall failed ', error);
+        //   }
+        //  })
 
         newAgent.onStateChange(() => setAgent(newAgent));
         newAgent.onRefresh(() => setAgent(newAgent));
@@ -348,7 +366,7 @@ const CCPComponent = () => {
         <ShowAccordionComponent showAccordion={showAccordion} />
       )}
       {disposition ? <DipositionWrapUpNotes /> : ""}
-
+      <QueueSelectionOutBoundCall agentsLists={agentsLists} />
       <div
         ref={containerRef}
         className="w-[350px] h-[90vh] max-h-[600px] min-h-[400px]"

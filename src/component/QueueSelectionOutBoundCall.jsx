@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { useConnect } from "../context/ConnectContext";
 
 // Ensure Amazon Connect Streams is globally available
 // <script src="https://connect-cdn.atlassian.io/connect-streams.js"></script> should be loaded in index.html
 
 const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
-    const {setOutBoundCall} = useConnect();
   const [isOpen, setIsOpen] = useState(true);
   const [selectedOption, setSelectedOption] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -24,11 +22,56 @@ const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
       setStatusMessage("❗ Please enter a phone number.");
       return;
     }
-    setOutBoundCall({
-        phoneNumber,
-        selectedOption
-    })
 
+    try {
+      setIsCalling(true);
+      setStatusMessage("📞 Initiating call...");
+
+      // Ensure Amazon Connect is initialized
+      if (typeof connect === "undefined" || !connect.core) {
+        setStatusMessage("⚠️ Amazon Connect not initialized.");
+        setIsCalling(false);
+        return;
+      }
+
+      // Get the current agent
+      const agent = connect.core.getAgent();
+
+      if (!agent) {
+        setStatusMessage("⚠️ Agent not available in Connect session.");
+        setIsCalling(false);
+        return;
+      }
+
+      // Create outbound call
+      agent.connect(
+        {
+          type: connect.ContactType.OUTBOUND,
+          endpoint: connect.Endpoint.byPhoneNumber(phoneNumber),
+        },
+        {
+          success: () => {
+            console.log("✅ Outbound call started successfully");
+            setStatusMessage("✅ Call started successfully!");
+          },
+          failure: (err) => {
+            console.error("❌ Outbound call failed:", err);
+            setStatusMessage("❌ Failed to start the call.");
+          },
+        }
+      );
+
+      // Optionally: Log disposition/notes
+      console.log({
+        disposition: selectedOption,
+        phone: phoneNumber,
+      });
+    } catch (error) {
+      console.error("Error initiating call:", error);
+      setStatusMessage("❌ Error initiating call.");
+    } finally {
+      setIsCalling(false);
+    }
   };
 
   return (

@@ -14,7 +14,7 @@ import ShowAccordionComponent from "../component/ShowAccordionComponent";
 import { addAgents, removeAgent } from "../services/addAndRemoveAgents.mjs";
 import GlobalStore from "../global/globalStore";
 import DipositionWrapUpNotes from "./DipositionWrapUpNotes";
-import QueueSelectionOutBoundCall from "./QueueSelectionOutBoundCall"
+import QueueSelectionOutBoundCall from "./QueueSelectionOutBoundCall";
 
 // Module-level flag to prevent multiple initializations
 let ccpInitialized = false;
@@ -22,7 +22,8 @@ let instanceAlias;
 
 const CCPComponent = () => {
   const containerRef = useRef(null);
-  const [agentsLists, setAgentsLists] =useState("");
+  const [agentsLists, setAgentsLists] = useState("");
+  const [wrapUpEnable, setWrapUpEnable] = useState("");
   const {
     agent,
     setAgent,
@@ -32,7 +33,7 @@ const CCPComponent = () => {
     pause,
     setPause,
     disposition,
-    outBoundCall
+    outBoundCall,
   } = useConnect();
   const envConfig = useConfig();
 
@@ -165,7 +166,9 @@ const CCPComponent = () => {
         console.log("agent name", Obj);
         addAgents(Obj, instanceAlias);
         const agentsProfile = newAgent.getRoutingProfile();
-        const list = agentsProfile.queues.filter((queue)=> queue.name !== null)
+        const list = agentsProfile.queues.filter(
+          (queue) => queue.name !== null
+        );
         setAgentsLists(list);
 
         // const {phoneNumber, selectedOption} = outBoundCall;
@@ -320,7 +323,32 @@ const CCPComponent = () => {
         },
       });
     }
+
+    getDataFromDB();
   });
+  const getDataFromDB = async () => {
+    try {
+      const apiURL =
+        "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/getdecrpytedData";
+
+      const response = await fetch(apiURL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const resData = await response.json();
+      const wrapup = resData.config.Wrap_Up_Notes;
+      setWrapUpEnable(wrapup);
+      
+
+      console.log("responseData from disposition", resData);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  // useEffect(() => {
+
+  // }, []);
 
   return (
     <div>
@@ -366,7 +394,8 @@ const CCPComponent = () => {
         <ShowAccordionComponent showAccordion={showAccordion} />
       )}
       {disposition ? <DipositionWrapUpNotes /> : ""}
-      <QueueSelectionOutBoundCall agentsLists={agentsLists} />
+      {wrapUpEnable ? "" : <QueueSelectionOutBoundCall agentsLists={agentsLists} /> }
+      
       <div
         ref={containerRef}
         className="w-[350px] h-[90vh] max-h-[600px] min-h-[400px]"

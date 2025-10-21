@@ -11,19 +11,18 @@ const DipositionWrapUpNotes = () => {
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
-    // setDisposition(val)
-    setIsOpen(false);
     console.log("Selected option:", e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    GlobalStore.disposition = selectedOption;
-    GlobalStore.wrapupNote = wrapUpNotes;
+  
     console.log({
       selectedOption,
       wrapUpNotes
     });
+    GlobalStore.disposition = selectedOption;
+    GlobalStore.wrapupNote = wrapUpNotes;
     setWrapUpNotes(" ");
     setSelectedOption(" ");
     setIsOpen(false);

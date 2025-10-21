@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import GlobalStore from "../global/globalStore";
 
 // Ensure Amazon Connect Streams is globally available
 // <script src="https://connect-cdn.atlassian.io/connect-streams.js"></script> should be loaded in index.html
 
 const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isCalling, setIsCalling] = useState(false);
@@ -13,6 +14,7 @@ const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
+    console.log("arn", selectedOption)
   };
 
   const handleSubmit = async (e) => {
@@ -35,37 +37,40 @@ const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
       }
 
       // Get the current agent
-      const agent = connect.core.getAgent();
+      const agent = GlobalStore.loggedInAgent;
 
       if (!agent) {
         setStatusMessage("⚠️ Agent not available in Connect session.");
         setIsCalling(false);
         return;
       }
+    const endpoint = connect.Endpoint.byPhoneNumber(phoneNumber);
+    const queueARN = selectedOption; // Selected queue from dropdown
 
-      // Create outbound call
-      agent.connect(
-        {
-          type: connect.ContactType.OUTBOUND,
-          endpoint: connect.Endpoint.byPhoneNumber(phoneNumber),
-        },
-        {
-          success: () => {
-            console.log("✅ Outbound call started successfully");
-            setStatusMessage("✅ Call started successfully!");
-          },
-          failure: (err) => {
-            console.error("❌ Outbound call failed:", err);
-            setStatusMessage("❌ Failed to start the call.");
-          },
-        }
-      );
+    agent.connect(endpoint, {
+    queueARN: queueARN,
+    success: function (data) {
+      console.log('MakeCall success ', data);
+      let payLoad = { type: 'OUTBOUND_STARTED', phone: number };
+      window.postMessage(payLoad, '*');
+    },
+    failure: function (error) {
+      alert(JSON.parse(error).message);
+      let payLoad = { type: 'OUTBOUND_FAILED', phone: number };
+      window.postMessage(payLoad, '*');
+      console.error('MakeCall failed ', error);
+    },
+  });
 
       // Optionally: Log disposition/notes
       console.log({
         disposition: selectedOption,
         phone: phoneNumber,
       });
+      setPhoneNumber("");
+      setSelectedOption("");
+      setStatusMessage("");
+      setIsOpen(false)
     } catch (error) {
       console.error("Error initiating call:", error);
       setStatusMessage("❌ Error initiating call.");

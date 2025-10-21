@@ -13,7 +13,7 @@ const useOnEnded = () => {
     setPause(null);
     GlobalStore.isMissCall ? setDisposition(false) : setDisposition(true)
     
-    TbSettingsPause
+    // TbSettingsPause
     GlobalStore.status = contact.getStatus().type;
     GlobalStore.queue = contact.getQueue().name;
     GlobalStore.channelType = contact.getType();

@@ -139,7 +139,7 @@ export function processOnDestroy(
       obj.callStartTime = GlobalStore.call_start_time;
       obj.isRecordingEnable = recordingEnable;
       obj.dispositionCode = GlobalStore.disposition;
-      // obj.wrapupNote = wrapupNote;
+      obj.wrapupNote = GlobalStore.wrapupNote;
       obj.hubspotContactId = GlobalStore.hubSpot_contact_id;
     } else {
       obj.callId = GlobalStore.engagement_id;
@@ -149,8 +149,8 @@ export function processOnDestroy(
       obj.agentName = agentName;
       obj.callType = "INBOUND"; //callType.toUpperCase(),
       obj.contactId = contact.contactId || engagement_body.contactId;
-      obj.dispositionCode = disposition;
-      obj.wrapupNote = wrapupNote;
+      obj.dispositionCode = GlobalStore.disposition;
+      obj.wrapupNote = GlobalStore.wrapupNote;
       obj.hubspotContactId = GlobalStore.hubSpot_contact_id;
     }
     obj.attributes = GlobalStore.attribute;
@@ -174,6 +174,7 @@ export function processOnDestroy(
     GlobalStore.multiMatch = false;
     GlobalStore.agentId = null;
     GlobalStore.disposition = null;
+    GlobalStore.wrapupNote = null;
     setShowAccordion(null);
     // newOutboundContact = false;
     // callState = null;

@@ -14,11 +14,11 @@ const ShowAccordionComponent = ({ showAccordion }) => {
   };
 
   return (
-    <div className="relative w-[350px]">
+    <div className="relative w-[350px] text-[13.5px]">
       {/* Accordion Header */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center px-4 py-3 text-white font-semibold bg-[#1e1e1e] z-20 relative"
+        className="w-full text-[13.5px] flex justify-between items-center px-4 py-2 text-white font-semibold bg-[#1e1e1e] z-20 relative"
       >
         <span>Contacts</span>
         <IoIosArrowDown
@@ -34,21 +34,21 @@ const ShowAccordionComponent = ({ showAccordion }) => {
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         } overflow-hidden`}
       >
-        <table className="w-full border-collapse">
-          <thead className="bg-blue-300">
+        <table className="w-full border-collapse text-[13.5px]">
+          <thead className="bg-blue-300 text-[13.5px]">
             <tr>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
+              <th className="px-4 py-1 text-left  font-semibold text-gray-700 border-b">
                 Name
               </th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
+              <th className="px-4 py-1 text-left  font-semibold text-gray-700 border-b">
                 Phone
               </th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
+              <th className="px-4 py-1 text-left  font-semibold text-gray-700 border-b">
                 Email
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="cursor-pointer">
             {showAccordion &&
               showAccordion.map((contact, index) => (
                 <tr
@@ -56,15 +56,15 @@ const ShowAccordionComponent = ({ showAccordion }) => {
                   onClick={() => onContactSelected(contact.vid)}
                   key={contact.vid || index}
                 >
-                  <td className="px-4 py-2 border-b text-sm">
+                  <td className="px-4 py-1 border-b text-sm">
                     <button className="contact-link">
                       {contact.properties?.firstname?.value || "N/A"}
                     </button>
                   </td>
-                  <td className="px-4 py-2 border-b text-sm">
+                  <td className="px-4 py-1 border-b text-sm">
                     {contact.properties?.phone?.value || "N/A"}
                   </td>
-                  <td className="px-4 py-2 border-b text-sm">
+                  <td className="px-4 py-1 border-b text-sm">
                     {contact.properties?.email?.value || "N/A"}
                   </td>
                 </tr>

@@ -24,6 +24,7 @@ const CCPComponent = () => {
   const containerRef = useRef(null);
   const [agentsLists, setAgentsLists] = useState("");
   const [wrapUpEnable, setWrapUpEnable] = useState("");
+  const [queueSlection, setQueueSelection] = useState("");
   const {
     agent,
     setAgent,
@@ -336,8 +337,10 @@ const CCPComponent = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const resData = await response.json();
+      const queue = resData.config.Queue_Selection;
       const wrapup = resData.config.Wrap_Up_Notes;
       setWrapUpEnable(wrapup);
+      setQueueSelection(queue);
       
 
       console.log("responseData from disposition", resData);
@@ -393,8 +396,9 @@ const CCPComponent = () => {
       ) : (
         <ShowAccordionComponent showAccordion={showAccordion} />
       )}
-      {disposition ? <DipositionWrapUpNotes /> : ""}
-      {wrapUpEnable ? "" : <QueueSelectionOutBoundCall agentsLists={agentsLists} /> }
+      {wrapUpEnable ? (<>{disposition ? <DipositionWrapUpNotes /> : ""}</>) : ""}
+      
+      {queueSlection ? <QueueSelectionOutBoundCall agentsLists={agentsLists} /> : "" }
       
       <div
         ref={containerRef}

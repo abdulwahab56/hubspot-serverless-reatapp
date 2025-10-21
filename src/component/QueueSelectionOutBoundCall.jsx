@@ -86,7 +86,7 @@ const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex text-[13.5px] justify-between items-center px-4 py-2 text-white font-light bg-[#1e1e1e] z-20 relative"
       >
-        <span>Wrap-Up Notes</span>
+        <span>Queue Selection</span>
         <IoIosArrowDown
           className={`transition-transform duration-300 ${
             isOpen ? "rotate-180" : "rotate-0"

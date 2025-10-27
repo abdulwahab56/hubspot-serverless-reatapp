@@ -12,6 +12,7 @@ export function processOnMissed(
   // Mark call as missed
   GlobalStore.isMissCall = true
   // setIsMissCall(true);
+  GlobalStore.callState = 'CALL_END';
 
   // Get current status
   let status = contact.getStatus().type;
@@ -45,7 +46,6 @@ export function processOnMissed(
   // Return UI/context info
   return {
     contactId: contact.getContactId(),
-    callState: "MISSED",
     missedTime: new Date().toISOString(),
   };
 }

@@ -11,7 +11,6 @@ const useOnACW = () => {
     const result = processOnACW(contact);
 
     updateContacts(result.contactId, {
-      callState: result.callState,
       acwStartTime: result.acwStartTime,
       contactId: result.contactId,
     });

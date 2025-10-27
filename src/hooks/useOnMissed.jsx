@@ -11,7 +11,6 @@ const useOnMissed = () => {
     
 
     updateContacts(result.contactId, {
-      callState: result.callState,
       missedTime: result.missedTime,
       contactId: result.contactId,
     });

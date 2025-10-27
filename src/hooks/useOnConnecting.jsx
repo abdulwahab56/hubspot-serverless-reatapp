@@ -50,7 +50,6 @@ const useOnConnecting = () => {
 
     // now safe to update context
     updateContact(result.contactId, {
-      callState: result.callState,
       callStartTime: result.callStartTime,
       contactId: result.contactId,
     });

@@ -35,7 +35,6 @@ const useOnConnected = () => {
     const result = processOnConnected(contact);
 
     updateContacts(result.contactId, {
-      callState: result.callState,
       connectedTime: result.connectedTime,
       contactId: result.contactId,
     });

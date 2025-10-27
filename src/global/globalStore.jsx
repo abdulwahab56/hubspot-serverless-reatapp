@@ -5,6 +5,7 @@ const GlobalStore = {
   call_start_time: null,
   callStartTime: null,
   status: null,
+  callState: null,
   queue: null,
   channelType: null,
   attribute: null,

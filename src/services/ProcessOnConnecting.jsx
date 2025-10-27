@@ -22,6 +22,7 @@ export function processOnConnecting(
 
   // ✅ Store HubSpot URL globally
   GlobalStore.hubSpotEntityURL = envConfig.HUBSPOT_ENTITY_URL;
+  GlobalStore.callState = 'CALL_START';
 
   GlobalStore.contact_id = contact.contactId;
   const status = contact.getStatus();
@@ -70,7 +71,6 @@ export function processOnConnecting(
 
   return {
     callStartTime: GlobalStore.callStartTime,
-    callState: "CALL_START",
     engagement_id: GlobalStore.engagement_id,
     channelType: GlobalStore.channelType,
   };

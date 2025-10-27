@@ -99,7 +99,7 @@ export function processOnDestroy(
   console.log("Call Status(Ended): " + status);
   // const channelType = contact.getType();
   const attributes = GlobalStore.attribute;
-  let callState = "CALL_END";
+  GlobalStore.callState = "CALL_END";
 
   if ((status = "ended")) {
     status = "COMPLETED";
@@ -182,7 +182,6 @@ export function processOnDestroy(
 
   return {
     contactId: contact.getContactId(),
-    callState: "DESTROYED",
     destroyedTime: new Date().toISOString(),
   };
 }

@@ -1,5 +1,10 @@
 import GlobalStore from "../global/globalStore";
-export const createEngagement = async (obj, url, newOutboundContact, isMissCall) => {
+export const createEngagement = async (
+  obj,
+  url,
+  newOutboundContact,
+  isMissCall
+) => {
   console.log("Request to create engagement initiated.");
   const apiURL =
     "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/createEngagement";
@@ -18,7 +23,10 @@ export const createEngagement = async (obj, url, newOutboundContact, isMissCall)
 
     const res = await response.json();
     GlobalStore.engagement_id = res.engagementId;
-    console.log("engagement id from create engagement", GlobalStore.engagement_id)
+    console.log(
+      "engagement id from create engagement",
+      GlobalStore.engagement_id
+    );
     let missCallobj;
     if (isMissCall) {
       missCallobj = {
@@ -30,7 +38,7 @@ export const createEngagement = async (obj, url, newOutboundContact, isMissCall)
         isRecordingEnable: "false",
         channelType: channelType,
       };
-      updateEngagement(missCallobj, newOutboundContact,url);
+      updateEngagement(missCallobj, newOutboundContact, url);
     }
     if (!newOutboundContact) emitSwitchEvent(url);
     console.log(`Request to create engagement completed successfully.`, res);
@@ -39,7 +47,7 @@ export const createEngagement = async (obj, url, newOutboundContact, isMissCall)
   }
 };
 
-export const updateEngagement = async (obj, newOutboundContact,url) => {
+export const updateEngagement = async (obj, newOutboundContact, url) => {
   console.log("Request to update engagement initiated.");
   const apiURL =
     "https://dxkzxrl20d.execute-api.us-east-1.amazonaws.com/dev/updateEngagement";
@@ -58,16 +66,16 @@ export const updateEngagement = async (obj, newOutboundContact,url) => {
     console.log(`Request to update engagement completed successfully. ${res}`);
     if (!newOutboundContact) emitSwitchEvent(GlobalStore.newURL);
     GlobalStore.newURL = null;
+    GlobalStore.callState = null;
   } catch (error) {
     console.log(`Request to update engagement failed. Error ${error}`);
   }
 };
 
-
 export function emitSwitchEvent(url) {
   var event = new CustomEvent("INBOUND_CALL", {
     detail: {
-      message: "RINGING",
+      message: GlobalStore.callState,
       data: url,
     },
   });

@@ -274,57 +274,6 @@ const CCPComponent = () => {
   };
 
   useEffect(() => {
-    window.addEventListener(
-      "message",
-      function (e) {
-        if (e.data.type == "DIAL_REQUEST") {
-          if (GlobalStore.loggedInAgent) {
-            console.log("Message Received");
-            console.log("Dialing..........");
-            console.log(e.data.phoneNumber);
-            if (e.data.phoneNumber) MakeCall(e.data.phoneNumber);
-          } else {
-            alert("The Calling widget is initializing");
-            let payLoad = { type: "OUTBOUND_FAILED", phone: number };
-            window.postMessage(payLoad, "*");
-          }
-        }
-        if (e.data.type == "ENGAGEMENT_CREATED") {
-          console.log("ENGAGEMENT_CREATED ID " + e.data.data.engagementId);
-          engagement_id = e.data.data.engagementId;
-        }
-        // if (e.data.hubspotOid.type === "hubspotOid") {
-        //   hubspotOwnerID = e.data.hubspotOid.data;
-        //   console.log("Received HubSpot Owner ID:", hubspotOwnerID);
-        // }
-      },
-      false
-    );
-
-    function MakeCall(number) {
-      console.log(" Going to dial : " + number);
-      /**
-       * Takes an endpoint
-       * connects to that endpoint
-       */
-      let endpoint = this.connect.Endpoint.byPhoneNumber(number);
-
-      const agent = GlobalStore.loggedInAgent;
-      agent.connect(endpoint, {
-        success: function (data) {
-          console.log("MakeCall success ", data);
-          let payLoad = { type: "OUTBOUND_STARTED", phone: number };
-          window.postMessage(payLoad, "*");
-        },
-        failure: function (error) {
-          alert(JSON.parse(error).message);
-          let payLoad = { type: "OUTBOUND_FAILED", phone: number };
-          window.postMessage(payLoad, "*");
-          console.error("MakeCall failed ", error);
-        },
-      });
-    }
-
     getDataFromDB();
   });
   const getDataFromDB = async () => {

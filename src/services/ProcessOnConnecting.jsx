@@ -4,6 +4,7 @@ import {
 } from "../services/engagementService";
 
 import GlobalStore from "../global/globalStore";
+let contactTab = null;
 
 export function processOnConnecting(
   contact,
@@ -290,10 +291,24 @@ const checkContactInfoInAttribute = async (engagement, attr) => {
 };
 
 // Event listener remains the same
+// document.addEventListener("INBOUND_CALL", function (e) {
+//   console.log("Call State:", e.detail.message);
+//   console.log("Contact URL:", e.detail.data);
+//   window.open(e.detail.data, "_blank");
+// });
 document.addEventListener("INBOUND_CALL", function (e) {
+  const contactUrl = e.detail.data;
   console.log("Call State:", e.detail.message);
-  console.log("Contact URL:", e.detail.data);
-  window.open(e.detail.data, "_blank");
+  console.log("Contact URL:", contactUrl);
+
+  // If no tab is open or the tab is closed, open a new one
+  if (!contactTab || contactTab.closed) {
+    contactTab = window.open(contactUrl, "_blank");
+  } else {
+    // If tab is already open, update its URL and bring it to focus
+    contactTab.location.href = contactUrl;
+    contactTab.focus();
+  }
 });
 
 export const resumeRecording = async (agentId) => {
@@ -370,3 +385,54 @@ export const pauseRecording = async (agentId) => {
     );
   }
 };
+
+  window.addEventListener(
+      "message",
+      function (e) {
+        if (e.data.type == "DIAL_REQUEST") {
+          if (GlobalStore.loggedInAgent) {
+            console.log("Message Received");
+            console.log("Dialing..........");
+            console.log(e.data.phoneNumber);
+            if (e.data.phoneNumber) MakeCall(e.data.phoneNumber);
+          } else {
+            alert("The Calling widget is initializing");
+            let payLoad = { type: "OUTBOUND_FAILED", phone: number };
+            window.postMessage(payLoad, "*");
+          }
+        }
+        if (e.data.type == "ENGAGEMENT_CREATED") {
+          console.log("ENGAGEMENT_CREATED ID " + e.data.data.engagementId);
+          engagement_id = e.data.data.engagementId;
+        }
+        // if (e.data.hubspotOid.type === "hubspotOid") {
+        //   hubspotOwnerID = e.data.hubspotOid.data;
+        //   console.log("Received HubSpot Owner ID:", hubspotOwnerID);
+        // }
+      },
+      false
+    );
+
+    function MakeCall(number) {
+      console.log(" Going to dial : " + number);
+      /**
+       * Takes an endpoint
+       * connects to that endpoint
+       */
+      let endpoint = connect.Endpoint.byPhoneNumber(number);
+
+      const agent = GlobalStore.loggedInAgent;
+      agent.connect(endpoint, {
+        success: function (data) {
+          console.log("MakeCall success ", data);
+          let payLoad = { type: "OUTBOUND_STARTED", phone: number };
+          window.postMessage(payLoad, "*");
+        },
+        failure: function (error) {
+          alert(JSON.parse(error).message);
+          let payLoad = { type: "OUTBOUND_FAILED", phone: number };
+          window.postMessage(payLoad, "*");
+          console.error("MakeCall failed ", error);
+        },
+      });
+    }

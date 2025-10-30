@@ -104,7 +104,7 @@ const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
           {/* 🎯 Disposition Dropdown */}
           <div>
             <label className="block text-[13.5px] text-sm font-medium text-gray-300 mb-2">
-              Select a Disposition
+              Select a Queue
             </label>
             <select
               value={selectedOption}
@@ -124,7 +124,7 @@ const DipositionWrapUpNotes = ({ agentsLists = [] }) => {
           {/* 📞 Dial Phone Number Input */}
           <div>
             <label className="block text-[13.5px] font-medium text-gray-300 mb-2">
-              Dial Phone Number
+             Phone Number
             </label>
             <input
               type="tel"
